@@ -1,3 +1,55 @@
+/* Code der går igen på alle sider - farver osv*/
+
+:root {
+    --primary: #4b7c9e;
+    --bg: #f8f9fb;
+    --card: #ffffff;
+    --nav-bg: #eef1f4;
+    --text: #1f2937;
+    --text-muted: #6b7280;
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text);
+}
+
+.card {
+    background-color: var(--card);
+    border: none;
+    border-radius: 14px;
+}
+
+/* NAV */
+.nav-pills .nav-link {
+    background-color: var(--nav-bg);
+    color: var(--text);
+    border-radius: 12px;
+    padding: 8px 16px;
+}
+
+.nav-pills .nav-link.active {
+    background-color: var(--primary);
+    color: white;
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #3b66e0;
+}
+
+.nav-pills .nav-link:hover {
+    background-color: #dde3ea;
+    cursor: pointer;
+}
+
+/* Css kode på alle sider stopper her */
+
+
 .valid.modified:not([type=checkbox]) {
     outline: 1px solid #26b050;
 }

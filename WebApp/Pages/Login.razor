@@ -1,0 +1,22 @@
+@page "/login"
+@using Core.Models
+@inject HttpClient Http
+@inject NavigationManager Nav
+
+<div class="container mt-5" style="max-width:400px;">
+    
+    <h3 class="mb-3">Login</h3>
+
+    <input class="form-control mb-2" placeholder="Email" @bind="email" />
+    <input class="form-control mb-3" type="password" placeholder="Password" @bind="password" />
+
+    <button class="btn btn-primary w-100">Login</button>
+
+</div>
+
+@code {
+    string email;
+    string password;
+
+   
+}
