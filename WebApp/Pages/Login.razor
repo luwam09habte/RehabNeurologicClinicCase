@@ -2,37 +2,48 @@
 @using Core.Models
 @inject HttpClient Http
 @inject NavigationManager Nav
-@inject ILocalStorageService localStorage
 @inject ISessionStorageService sessionStorage
 
+
 <div class="container mt-5" style="max-width:400px;">
-    
+
     <h3 class="mb-3">Login</h3>
 
     <input class="form-control mb-2" placeholder="Email" @bind="email" />
     <input class="form-control mb-3" type="password" placeholder="Password" @bind="password" />
+
+    @if (!string.IsNullOrEmpty(errorText))
+    {
+        <div class="alert alert-danger mb-2">@errorText</div>
+    }
 
     <button class="btn btn-primary w-100" @onclick="OnClickLogin">Login</button>
 
 </div>
 
 @code {
-    string email;
-    string password;
+    string email = "";
+    string password = "";
     string errorText = "";
 
     public async Task OnClickLogin()
     {
-        User? loggedIn = await fUsers.ValidLogin(email, password);
-        if (loggedIn != null)
-        {
-            await sessionStorage.SetItemAsync("user", loggedIn);
+        // Kalder på Validate endpoint med API
+        var response = await Http.PostAsJsonAsync($"api/User/Validate?email={email}&password={password}", new {});
 
-            navManager.NavigateTo("/patient", true);
-        }
-        else
+        if (response.IsSuccessStatusCode)
         {
-            errorText = "Forkert email eller adgangskode - Prøv igen"
+            User? loggedIn = await response.Content.ReadFromJsonAsync<User>();
+
+            if (loggedIn != null)
+            {
+                await sessionStorage.SetAsync("user", loggedIn);
+                Nav.NavigateTo("/patient", true);
+            }
+            else
+            {
+                errorText = "Forkert email eller adgangskode - Prøv igen";
+            }
         }
     }
 }

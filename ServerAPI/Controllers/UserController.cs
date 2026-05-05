@@ -4,10 +4,14 @@ using ServerAPI.Interfaces;
 
 namespace ServerAPI.Controllers;
 
+
+[ApiController]
+[Route("api/[controller]")]
 public class UserController
 {
     private IUserRepository FakeUserRepository;
 
+    // Dependency injection. Constructor til funktionen ovenfor
     public UserController(IUserRepository userRepository)
     {
         this.FakeUserRepository = userRepository;
@@ -19,7 +23,7 @@ public class UserController
         return FakeUserRepository.GetAll();
     }
 
-    [HttpPost]
+    [HttpPost("Validate")]
     public User? Validate(string email, string password)
     {
         return FakeUserRepository.Validate(email, password);
