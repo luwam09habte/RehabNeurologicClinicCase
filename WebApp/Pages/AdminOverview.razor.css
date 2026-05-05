@@ -1,0 +1,14 @@
+.card-row {
+    display: flex;
+    gap: 16px; /* afstand mellem cards */
+    flex-wrap: wrap; /* gør at de bryder linje på små skærme */
+}
+
+.dashboard-card {
+    flex: 1; /* gør dem lige brede */
+    min-width: 200px; /* sikrer de ikke bliver for små */
+    padding: 16px;
+    border-radius: 8px;
+    background: white;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
