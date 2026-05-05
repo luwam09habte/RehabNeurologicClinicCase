@@ -38,8 +38,8 @@
 
             if (loggedIn != null)
             {
-                await sessionStorage.SetItemAsync("user", loggedIn);
-                Nav.NavigateTo("/patient", true);
+                await sessionStorage.SetItemAsync("Admin", loggedIn);
+                Nav.NavigateTo("/home", true);
             }
             else
             {
