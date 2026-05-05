@@ -2,6 +2,8 @@
 @using Core.Models
 @inject HttpClient Http
 @inject NavigationManager Nav
+@inject ILocalStorageService localStorage
+@inject ISessionStorageService sessionStorage
 
 <div class="container mt-5" style="max-width:400px;">
     
@@ -10,13 +12,27 @@
     <input class="form-control mb-2" placeholder="Email" @bind="email" />
     <input class="form-control mb-3" type="password" placeholder="Password" @bind="password" />
 
-    <button class="btn btn-primary w-100">Login</button>
+    <button class="btn btn-primary w-100" @onclick="OnClickLogin">Login</button>
 
 </div>
 
 @code {
     string email;
     string password;
+    string errorText = "";
 
-   
+    public async Task OnClickLogin()
+    {
+        User? loggedIn = await fUsers.ValidLogin(email, password);
+        if (loggedIn != null)
+        {
+            await sessionStorage.SetItemAsync("user", loggedIn);
+
+            navManager.NavigateTo("/patient", true);
+        }
+        else
+        {
+            errorText = "Forkert email eller adgangskode - Prøv igen"
+        }
+    }
 }
