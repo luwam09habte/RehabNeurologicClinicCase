@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 // Injecter den rigtige klasse for IUserRepository
-builder.Services.AddSingleton<IUserRepository, FakeUserRepository>();
+builder.Services.AddSingleton<IPatientRepository, FakePatientRepository>();
 
 builder.Services.AddCors(options =>
 {

@@ -34,7 +34,7 @@
 
         if (response.IsSuccessStatusCode)
         {
-            User? loggedIn = await response.Content.ReadFromJsonAsync<User>();
+            Admin? loggedIn = await response.Content.ReadFromJsonAsync<Admin>();
 
             if (loggedIn != null)
             {
