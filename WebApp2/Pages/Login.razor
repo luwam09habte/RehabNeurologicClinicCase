@@ -1,0 +1,58 @@
+@page "/"
+@layout LoginLayout
+@using Core.Models
+@inject HttpClient Http
+@inject NavigationManager Nav
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
+
+
+<div class="container mt-5" style="max-width:400px;">
+
+    <h3 class="mb-3">Login</h3>
+
+    <input class="form-control mb-2" placeholder="Email" @bind="email" />
+    <input class="form-control mb-3" type="password" placeholder="Password" @bind="password" />
+
+    @if (!string.IsNullOrEmpty(errorText))
+    {
+        <div class="alert alert-danger mb-2">@errorText</div>
+    }
+
+    <button class="btn btn-primary w-100" @onclick="OnClickLogin">Login</button>
+
+</div>
+
+@code {
+    private string email = string.Empty;
+    private string password = string.Empty;
+    private string errorText = string.Empty;
+
+    public async Task OnClickLogin()
+    {
+        // Kalder på Validate endpoint med API
+        var response = await Http.PostAsJsonAsync(
+            $"http://localhost:5160/api/admin/validate?email={email}&password={password}",
+            new {}
+        );
+
+
+        if (response.IsSuccessStatusCode)
+        {
+            Patient? loggedIn = await response.Content.ReadFromJsonAsync<Patient>();
+
+            if (loggedIn != null)
+            {
+                await sessionStorage.SetItemAsync("Patient", loggedIn);
+                Nav.NavigateTo("/home", true);
+            }
+            else
+            {
+                errorText = "Forkert email eller adgangskode - Prøv igen";
+            }
+        }
+        else
+        {
+            errorText = "Kunne ikke kontakte serveren";
+        }
+    }
+}
