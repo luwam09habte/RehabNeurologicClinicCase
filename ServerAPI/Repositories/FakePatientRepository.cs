@@ -7,8 +7,8 @@ public class FakePatientRepository : IPatientRepository
 {
     private List<Patient> fPatient =
     [
-        new Patient() { PatientId = 1, Name = "Patient1", Password = "Peter123", Email = "Peter123@gmail.com", Role = "Patient" },
-        new Patient() { PatientId = 2, Name = "Patient2", Password = "Lars123", Email = "Lars123@gmail.com", Role = "Patient" }
+        new Patient() { PatientId = 1, Name = "Patient1", Password = "Patient123", Email = "Patient1", Role = "Patient" },
+        new Patient() { PatientId = 2, Name = "Patient2", Password = "Patient123", Email = "Patient2", Role = "Patient" }
     ];
 
     public Patient[] GetAll()
