@@ -5,8 +5,8 @@ using ServerAPI.Interfaces;
 namespace ServerAPI.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
-public class AdminController
+[Route("api/admin")]
+public class AdminController : ControllerBase
 {
     private IAdminRepository FakeAdminRepository;
 
@@ -22,7 +22,7 @@ public class AdminController
         return FakeAdminRepository.GetAll();
     }
 
-    [HttpPost("Validate")]
+    [HttpPost("validate")]
     public Admin? Validate(string email, string password)
     {
         return FakeAdminRepository.Validate(email, password);

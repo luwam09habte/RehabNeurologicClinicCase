@@ -23,14 +23,14 @@
 </div>
 
 @code {
-    string email = "";
-    string password = "";
-    string errorText = "";
+    private string email = string.Empty;
+    private string password = string.Empty;
+    private string errorText = string.Empty;
 
     public async Task OnClickLogin()
     {
         // Kalder på Validate endpoint med API
-        var response = await Http.PostAsJsonAsync($"api/User/Validate?email={email}&password={password}", new {});
+        var response = await Http.PostAsJsonAsync("http://localhost:5160/api/admin/validate", new {});
 
         if (response.IsSuccessStatusCode)
         {
