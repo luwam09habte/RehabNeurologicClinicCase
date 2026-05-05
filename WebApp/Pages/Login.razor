@@ -30,7 +30,11 @@
     public async Task OnClickLogin()
     {
         // Kalder på Validate endpoint med API
-        var response = await Http.PostAsJsonAsync("http://localhost:5160/api/admin/validate", new {});
+        var response = await Http.PostAsJsonAsync(
+            $"http://localhost:5160/api/admin/validate?email={email}&password={password}",
+            new {}
+        );
+
 
         if (response.IsSuccessStatusCode)
         {
@@ -45,6 +49,10 @@
             {
                 errorText = "Forkert email eller adgangskode - Prøv igen";
             }
+        }
+        else
+        {
+            errorText = "Kunne ikke kontakte serveren";
         }
     }
 }

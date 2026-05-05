@@ -7,7 +7,7 @@ public class FakeAdminRepository : IAdminRepository
 {
     private List<Admin> fAdmins =
     [
-        new Admin() { AdminId = 1, Name = "Admin", Password = "Admin123", Email = "Hans123@gmail.com", Role = "Admin" },
+        new Admin() { AdminId = 1, Name = "Admin", Password = "Admin123", Email = "Admin1", Role = "Admin" },
     ];
 
     public Admin[] GetAll()
