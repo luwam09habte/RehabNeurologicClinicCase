@@ -7,7 +7,7 @@ public class FakeUserRepository : IUserRepository
 {
     private List<User> fUsers =
     [
-        new User() { UserId = 1, Name = "Admin1", Password = "Hans123", Email = "Hans123@gmail.com", Role = "admin" },
+        new User() { UserId = 1, Name = "Admin1", Password = "Hans123", Email = "Hans123@gmail.com", Role = "Admin" },
         new User() { UserId = 2, Name = "Patient1", Password = "Peter123", Email = "Peter123@gmail.com", Role = "Patient" },
         new User() { UserId = 3, Name = "Patient2", Password = "Lars123", Email = "Lars123@gmail.com", Role = "Patient" }
     ];

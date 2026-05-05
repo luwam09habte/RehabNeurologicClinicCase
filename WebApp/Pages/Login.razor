@@ -1,8 +1,9 @@
 @page "/login"
+@layout "MainLayout"
 @using Core.Models
 @inject HttpClient Http
 @inject NavigationManager Nav
-@inject ISessionStorageService sessionStorage
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
 
 
 <div class="container mt-5" style="max-width:400px;">
@@ -37,7 +38,7 @@
 
             if (loggedIn != null)
             {
-                await sessionStorage.SetAsync("user", loggedIn);
+                await sessionStorage.SetItemAsync("user", loggedIn);
                 Nav.NavigateTo("/patient", true);
             }
             else
