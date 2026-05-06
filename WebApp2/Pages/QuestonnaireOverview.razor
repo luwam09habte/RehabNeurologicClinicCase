@@ -1,25 +1,37 @@
+@page "/questonnaireoverview"
+@using Core.Models
 @layout MainLayout2
+@inject HttpClient Http
+@inject NavigationManager Nav
 
-@page "/QuestonnaireOverview"
-<h5>Dine tilgængelige spørgeskemaer</h5> <br/>
+<h5>Mine tilgængelige Spørgeskemaer</h5>
 
-<div class="dashboard">
-
-    <div class="grid-top">
-
-        <a href="/QuestonnaireAnswers" class="dashboard-card text-decoration-none">
-            <div class="stat-label">Spørgeskema 1</div>
-        </a>
-   
-        
-    </div>
-    
-    <div class="dashboard-card text-decoration-none">
-        <div class="stat-label">Spørgeskema 2</div>
-
-    </div>
-</div>
+@if (questionnaires == null)
+{
+    <p>Du har ingen tilgængelige spørgeskemaer</p>
+}
+else
+{
+    @foreach (var q in questionnaires)
+    {
+        <div class="dashboard-card mb-2" style="cursor:pointer;" @onclick="() => GoTo(q.QuestionnaireId)">
+            @q.Title
+        </div>
+    }
+}
 
 @code {
-    
+    private List<Questionnaire>? questionnaires;
+
+    protected override async Task OnInitializedAsync()
+    {
+        questionnaires = await Http.GetFromJsonAsync<List<Questionnaire>>(
+            "http://localhost:5160/api/questionnaire"
+        );
+    }
+
+    void GoTo(int id)
+    {
+        Nav.NavigateTo($"/questonnaireanswers/{id}");
+    }
 }
