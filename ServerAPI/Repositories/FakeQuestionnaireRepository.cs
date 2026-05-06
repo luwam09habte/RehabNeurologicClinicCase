@@ -2,11 +2,11 @@ using Core.Models;
 namespace ServerAPI.Interfaces;
 
 // Constructor med en masse hard coded data til spørgeskema
-public class FQuestionnaireRepo : IQuestionnaireRepository
+public class FakeQuestionnaireRepository : IQuestionnaireRepository
 {
     private List<Questionnaire> _questionnaires;
 
-    public FQuestionnaireRepo()
+    public FakeQuestionnaireRepository()
     {
         _questionnaires = new List<Questionnaire>
         {

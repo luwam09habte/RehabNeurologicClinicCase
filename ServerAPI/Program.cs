@@ -10,6 +10,8 @@ builder.Services.AddControllers();
 // Injecter den rigtige klasse for IUserRepository
 builder.Services.AddSingleton<IPatientRepository, FakePatientRepository>();
 builder.Services.AddSingleton<IAdminRepository, FakeAdminRepository>();
+builder.Services.AddSingleton<IQuestionnaireRepository, FakeQuestionnaireRepository>();
+
 
 
 builder.Services.AddCors(options =>

@@ -5,7 +5,7 @@ using ServerAPI.Interfaces;
 namespace ServerAPI.Controllers;
 
 [ApiController]
-[Route("/api/questionnaire")]
+[Route("api/questionnaire")]
 public class QuestionnaireController : ControllerBase
 {
     private IQuestionnaireRepository FakeQuestionnaireRepository;
@@ -21,7 +21,7 @@ public class QuestionnaireController : ControllerBase
         return Ok(FakeQuestionnaireRepository.GetQuestionnaires());
     }
     
-    [HttpGet("Id")]
+    [HttpGet("{id}")]
     public ActionResult<Questionnaire> GetById(int id)
     {
         var questionnaire = FakeQuestionnaireRepository.GetById(id);
