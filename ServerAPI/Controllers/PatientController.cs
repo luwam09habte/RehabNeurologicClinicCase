@@ -5,7 +5,7 @@ using ServerAPI.Interfaces;
 namespace ServerAPI.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/patient")]
 public class PatientController
 {
     private IPatientRepository FakePatientRepository;
