@@ -14,10 +14,12 @@ body {
     color: var(--text);
 }
 
-.card {
+.dashboard-card {
+    display: block;
     background-color: var(--card);
     border: none;
-    border-radius: 14px;
+    border-radius: 10px;
+    padding: 24px;
 }
 
 /* NAV */
