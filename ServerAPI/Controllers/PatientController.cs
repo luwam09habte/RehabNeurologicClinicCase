@@ -6,7 +6,7 @@ namespace ServerAPI.Controllers;
 
 [ApiController]
 [Route("api/patient")]
-public class PatientController
+public class PatientController : ControllerBase
 {
     private IPatientRepository FakePatientRepository;
 
