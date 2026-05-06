@@ -6,10 +6,10 @@
 
 @if (questionnaire == null)
 {
-    <p>Nothing</p>
+    <p>Indlæser...</p>
 }
 else
-
+{
     <h3>@questionnaire.Title</h3>
 
     @foreach (var q in questionnaire.Questions)
@@ -20,15 +20,15 @@ else
             @foreach (var option in q.Option)
             {
                 <label>
-                    <input type="radio" name="@q.QuestionId" value="@option"/>
+                    <input type="radio" name="@q.QuestionId" value="@option" />
                     @option
                 </label>
             }
         </div>
     }
 }
-@code {
 
+@code {
     private Questionnaire questionnaire;
 
     protected override async Task OnInitializedAsync()
@@ -36,4 +36,3 @@ else
         questionnaire = await Http.GetFromJsonAsync<Questionnaire>("api/questionnaire/1");
     }
 }
-    

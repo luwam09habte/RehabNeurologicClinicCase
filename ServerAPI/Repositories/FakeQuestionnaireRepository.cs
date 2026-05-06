@@ -1,5 +1,6 @@
 using Core.Models;
-namespace ServerAPI.Interfaces;
+using ServerAPI.Interfaces;
+namespace ServerAPI.Repositories;
 
 // Constructor med en masse hard coded data til spørgeskema
 public class FakeQuestionnaireRepository : IQuestionnaireRepository
