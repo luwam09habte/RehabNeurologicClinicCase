@@ -9,6 +9,24 @@ namespace ServerAPI.Controllers;
 public class QuestionnaireController : ControllerBase
 {
     private IQuestionnaireRepository FakeQuestionnaireRepository;
+
+    public QuestionnaireController(IQuestionnaireRepository questionnaireRepository)
+    {
+        this.FakeQuestionnaireRepository= questionnaireRepository;
+    }
+
+    [HttpGet]
+    public ActionResult<List<Questionnaire>> GetQuestionnaires()
+    {
+        return Ok(FakeQuestionnaireRepository.GetQuestionnaires());
+    }
     
-    public 
+    [HttpGet("Id")]
+    public ActionResult<Questionnaire> GetById(int id)
+    {
+        var questionnaire = FakeQuestionnaireRepository.GetById(id);
+        if (questionnaire == null)
+            return NotFound();
+        return Ok(questionnaire);
+    }
 }
