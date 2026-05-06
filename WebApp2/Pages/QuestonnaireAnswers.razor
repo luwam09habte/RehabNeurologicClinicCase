@@ -4,9 +4,36 @@
 @inject HttpClient Http
 @inject NavigationManager Nav
 
-
-
-
-@code {
-    
+@if (questionnaire == null)
+{
+    <p>Nothing</p>
 }
+else
+
+    <h3>@questionnaire.Title</h3>
+
+    @foreach (var q in questionnaire.Questions)
+    {
+        <div>
+            <p>@q.Text</p>
+
+            @foreach (var option in q.Option)
+            {
+                <label>
+                    <input type="radio" name="@q.QuestionId" value="@option"/>
+                    @option
+                </label>
+            }
+        </div>
+    }
+}
+@code {
+
+    private Questionnaire questionnaire;
+
+    protected override async Task OnInitializedAsync()
+    {
+        questionnaire = await Http.GetFromJsonAsync<Questionnaire>("api/questionnaire/1");
+    }
+}
+    
