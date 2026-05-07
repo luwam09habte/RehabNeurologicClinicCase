@@ -3,7 +3,7 @@
 @using Core.Models
 @inject HttpClient Http
 @inject NavigationManager Nav
-@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 
 <div class="container mt-5" style="max-width:400px;">
@@ -42,7 +42,7 @@
 
             if (loggedIn != null)
             {
-                await sessionStorage.SetItemAsync("Patient", loggedIn);
+                await localStorage.SetItemAsync("Patient", loggedIn);
                 Nav.NavigateTo("/QuestonnaireOverview", true);
             }
             else
