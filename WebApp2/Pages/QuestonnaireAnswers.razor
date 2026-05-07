@@ -1,4 +1,4 @@
-@page "/QuestonnaireAnswers"
+@page "/questonnaireanswers/{id:int}"
 @using Core.Models
 @layout MainLayout2
 @inject HttpClient Http
@@ -29,10 +29,12 @@ else
 }
 
 @code {
+    [Parameter] public int id { get; set; }
+
     private Questionnaire questionnaire;
 
     protected override async Task OnInitializedAsync()
     {
-        questionnaire = await Http.GetFromJsonAsync<Questionnaire>("api/questionnaire/1");
+        questionnaire = await Http.GetFromJsonAsync<Questionnaire>($"http://localhost:5160/api/questionnaire/{id}");
     }
 }
