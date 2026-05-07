@@ -4,6 +4,19 @@
 @inject HttpClient Http
 @inject NavigationManager Nav
 
+@if (ShowPopup)
+{
+    <div class="popup-overlay">
+        <div class="popup">
+            <div class="content">
+                <h3>Tak for dine svar!</h3>
+                <p>Dit spørgeskema er besvaret og blevet sendt!</p>
+                <button class="btn btn-primary" @onclick="ClosePopup">Luk</button>
+            </div>
+        </div>
+        </div>
+}
+    
 @if (questionnaire == null)
 {
     <p>Indlæser...</p>
@@ -27,14 +40,26 @@ else
         </div>
     }
 }
+<button class="submitbtn" @onclick="OnClickSubmit">Send</button>
 
 @code {
     [Parameter] public int id { get; set; }
-
     private Questionnaire questionnaire;
-
+    private bool ShowPopup = false;
+    
     protected override async Task OnInitializedAsync()
     {
         questionnaire = await Http.GetFromJsonAsync<Questionnaire>($"http://localhost:5160/api/questionnaire/{id}");
+    }
+    
+    private void OnClickSubmit()
+    {
+        ShowPopup = true;
+    }
+    
+    private void ClosePopup()
+    {
+        ShowPopup = false;
+        Nav.NavigateTo("/questonnaireoverview", true);
     }
 }
