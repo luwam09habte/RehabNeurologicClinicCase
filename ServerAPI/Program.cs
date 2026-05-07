@@ -12,6 +12,7 @@ builder.Services.AddControllers();
 builder.Services.AddSingleton<IPatientRepository, FakePatientRepository>();
 builder.Services.AddSingleton<IAdminRepository, FakeAdminRepository>();
 builder.Services.AddSingleton<IQuestionnaireRepository, FakeQuestionnaireRepository>();
+builder.Services.AddSingleton<IQuestionnaireAnswerRepository, FakeQuestionnaireAnswerRepository>();
 /*builder.Services.Configure<MongoDBSettings>(
     builder.Configuration.GetSection("ConnectionStrings"));*/
 
