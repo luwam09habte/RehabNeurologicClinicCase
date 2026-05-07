@@ -5,26 +5,30 @@ using ServerAPI.Interfaces;
 namespace ServerAPI.Controllers;
 
 [ApiController]
-[Route("api/answers")]
+[Route("api/questionnaireanswer")]
 public class QuestionnaireAnswerController : ControllerBase
 {
-    private readonly IQuestionnaireAnswerRepository _repo;
+    private readonly IQuestionnaireAnswerRepository _repository;
 
-    public QuestionnaireAnswerController(IQuestionnaireAnswerRepository repo)
+    public QuestionnaireAnswerController(IQuestionnaireAnswerRepository repository)
     {
-        _repo = repo;
+        _repository = repository;
     }
 
-    [HttpPost]
-    public IActionResult SaveAnswer([FromBody] QuestionnaireAnswer answer)
+    [HttpPost("submit")]
+    public ActionResult SubmitQuestionnaire([FromBody] QuestionnaireAnswer answer)
     {
-        _repo.Save(answer);
+        if (answer == null)
+            return BadRequest();
+
+        _repository.SubmitAnswer(answer);
+
         return Ok();
     }
-
-    [HttpGet("{patientId}")]
-    public ActionResult<List<QuestionnaireAnswer>> GetByPatient(int patientId)
+    
+    [HttpGet]
+    public ActionResult<List<QuestionnaireAnswer>> GetAll()
     {
-        return Ok(_repo.GetByPatient(patientId));
+        return Ok(_repository.GetAll());
     }
 }

@@ -16,7 +16,7 @@
                 <button class="btn btn-primary" @onclick="ClosePopup">Luk</button>
             </div>
         </div>
-        </div>
+    </div>
 }
     
 @if (questionnaire == null)
@@ -35,7 +35,8 @@ else
             @foreach (var option in q.Option)
             {
                 <label>
-                    <input type="radio" name="@q.QuestionId" value="@option" />
+                    <input type="radio" name="@q.QuestionId" value="@option" 
+                           @onchange="() => SaveAnswer(q.QuestionId, option)" />
                     @option
                 </label>
             }
@@ -48,17 +49,43 @@ else
     [Parameter] public int id { get; set; }
     private Questionnaire questionnaire;
     private bool ShowPopup = false;
-    
+    private Dictionary<int, string> answers = new();
+    private int patientId;
+
     protected override async Task OnInitializedAsync()
     {
-        questionnaire = await Http.GetFromJsonAsync<Questionnaire>($"http://localhost:5160/api/questionnaire/{id}");
+        var patient = await localStorage.GetItemAsync<Patient>("Patient");
+        patientId = patient.PatientId;
+        
+        questionnaire = await Http.GetFromJsonAsync<Questionnaire>(
+            $"http://localhost:5160/api/questionnaire/{id}"
+        );
     }
-    
-    private void OnClickSubmit()
+
+    private void SaveAnswer(int questionId, string option)
     {
+        answers[questionId] = option;
+    }
+
+    private async Task OnClickSubmit()
+    {
+        var questionnaireAnswer = new QuestionnaireAnswer
+        {
+            QuestionnaireId = id,
+            PatientId = patientId,
+            SubmittedAt = DateTime.Now,
+            Answers = answers.Select(a => new QuestionAnswer
+            {
+                QuestionId = a.Key,
+                SelectedOption = a.Value
+            }).ToList()
+        };
+
+        await Http.PostAsJsonAsync("http://localhost:5160/api/questionnaireanswer/submit", questionnaireAnswer);
+
         ShowPopup = true;
     }
-    
+
     private void ClosePopup()
     {
         ShowPopup = false;

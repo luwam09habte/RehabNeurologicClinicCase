@@ -7,14 +7,12 @@ public class FakeQuestionnaireAnswerRepository : IQuestionnaireAnswerRepository
 {
     private List<QuestionnaireAnswer> _answers = new();
 
-    public void Save(QuestionnaireAnswer answer)
+    public void SubmitAnswer(QuestionnaireAnswer answer)
     {
-        answer.AnswerId = _answers.Count + 1;
         _answers.Add(answer);
     }
-
-    public List<QuestionnaireAnswer> GetByPatient(int patientId)
+    public List<QuestionnaireAnswer> GetAll()
     {
-        return _answers.Where(a => a.PatientId == patientId).ToList();
+        return _answers;
     }
 }
