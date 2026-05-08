@@ -1,24 +1,36 @@
 @page "/AdminOverview"
-<h3>Oversigt</h3>
 
-<div class="dashboard">
+<h3 class="mb-4">Oversigt</h3>
 
-    <div class="grid-top">
-        <div class="stat-label">Aktive Patienter</div>
-    </div>
+<div class="row g-3">
 
-    <div class="card-row">
-        <div class="dashboard-card">
-            <h5>Ventende Spørgeskemaer</h5>
-        </div>
-
-        <div class="dashboard-card">
-            <h5>Gennemførte denne måned</h5>
+    <div class="col-md-4">
+        <div class="card p-3 d-flex flex-row align-items-center gap-3">
+            <div class="stat-icon bg-primary"></div>
+            <div>
+                <h5 class="mb-1">Aktive Patienter</h5>
+                <p class="stat-number">5</p>
+            </div>
         </div>
     </div>
 
+    <div class="col-md-4">
+        <div class="card p-3 d-flex flex-row align-items-center gap-3">
+            <div class="stat-icon bg-warning"></div>
+            <div>
+                <h5 class="mb-1">Ventende Spørgeskemaer</h5>
+                <p class="stat-number">2</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card p-3 d-flex flex-row align-items-center gap-3">
+            <div class="stat-icon bg-success"></div>
+            <div>
+                <h5 class="mb-1">Gennemførte denne måned</h5>
+                <p class="stat-number">0</p>
+            </div>
+        </div>
+    </div>
 </div>
-
-@code {
-
-}
