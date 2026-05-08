@@ -7,7 +7,8 @@ public class FakePatientRepository : IPatientRepository
 {
     private List<Patient> fPatient =
     [
-        new Patient() { PatientId = 1, Name = "Patient1", Password = "Patient123", Email = "Patient1", Role = "Patient" },
+        new Patient() { PatientId = 1, Name = "Sebastian Kahr Hansen", Password = "Patient123", 
+            Email = "Sebkahr@gmail.com", PhoneNumber = "+45 60 46 88 03", InjuryType = "Slagtilfælde", Role = "Patient" },
         new Patient() { PatientId = 2, Name = "Patient2", Password = "Patient123", Email = "Patient2", Role = "Patient" }
     ];
 

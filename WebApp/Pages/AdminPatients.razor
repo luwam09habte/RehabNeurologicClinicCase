@@ -1,0 +1,45 @@
+@page "/admin/patients"
+@using Core.Models
+@inject HttpClient Http
+@inject NavigationManager Nav
+
+<h3 class="mb-4">Patienter</h3>
+
+@if (patients == null)
+{
+    <p>Indlæser...</p>
+}
+else if (!patients.Any())
+{
+    <p>Ingen patienter fundet.</p>
+}
+else
+{
+    <div class="row g-3">
+        @foreach (var p in patients)
+        {
+            <div class="col-md-6">
+                <div class="card p-3 shadow-sm">
+                    <h5 class="mb-1">@p.Name</h5>
+                    <p class="text-muted mb-1">@p.Email</p>
+                    <p class="text-muted mb-1">@p.PhoneNumber</p>
+                    
+                    <p class="text-muted mb-1">@p.InjuryType</p>
+                    
+                    <span class="badge bg-primary"></span>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private List<Patient>? patients;
+
+    protected override async Task OnInitializedAsync()
+    {
+        patients = await Http.GetFromJsonAsync<List<Patient>>(
+            "http://localhost:5160/api/patient"
+        );
+    }
+}
