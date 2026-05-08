@@ -48,6 +48,6 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        allAnswers = await Http.GetFromJsonAsync<List<QuestionnaireAnswer>>("http://localhost:5160/api/answers");
+        allAnswers = await Http.GetFromJsonAsync<List<QuestionnaireAnswer>>("http://localhost:5160/api/questionnaire");
     }
 }
