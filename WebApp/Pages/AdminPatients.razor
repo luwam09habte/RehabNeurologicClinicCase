@@ -1,40 +1,52 @@
 @page "/admin/patients"
 @using Core.Models
 @inject HttpClient Http
-@inject NavigationManager Nav
+
+<!-- DEN HER SIDE SKAL VI LIGE KIGGE PÅ -->
+
+
 
 <h3 class="mb-4">Patienter</h3>
 
-@if (patients == null)
-{
-    <p>Indlæser...</p>
-}
-else if (!patients.Any())
-{
-    <p>Ingen patienter fundet.</p>
-}
-else
-{
-    <div class="row g-3">
-        @foreach (var p in patients)
-        {
-            <div class="col-md-6">
-                <div class="card p-3 shadow-sm">
-                    <h5 class="mb-1">@p.Name</h5>
-                    <p class="text-muted mb-1">@p.Email</p>
-                    <p class="text-muted mb-1">@p.PhoneNumber</p>
-                    
-                    <p class="text-muted mb-1">@p.InjuryType</p>
-                    
-                    <span class="badge bg-primary"></span>
-                </div>
-            </div>
-        }
+<!-- søg + filter -->
+<div class="row mb-4 g-2">
+    <div class="col-md-8">
+        <input class="form-control"
+               placeholder="Søg efter navn eller email..."
+               @bind="searchText" />
     </div>
-}
+
+    <div class="col-md-4">
+        <select class="form-select" @bind="selectedInjuryType">
+            <option value="">Alle skader</option>
+            @foreach (var type in InjuryTypes)
+            {
+                <option value="@type">@type</option>
+            }
+        </select>
+    </div>
+</div>
+
+<!-- Patient liste -->
+<div class="row g-3">
+    @foreach (var p in FilteredPatients)
+    {
+        <div class="col-md-6">
+            <div class="card p-3 shadow-sm">
+                <h5 class="mb-1">@p.Name</h5>
+                <p class="text-muted mb-1">@p.Email</p>
+                <p class="text-muted mb-1">@p.PhoneNumber</p>
+
+                <span class="badge bg-primary">@p.InjuryType</span>
+            </div>
+        </div>
+    }
+</div>
 
 @code {
     private List<Patient>? patients;
+    private string searchText = "";
+    private string selectedInjuryType = "";
 
     protected override async Task OnInitializedAsync()
     {
@@ -42,4 +54,22 @@ else
             "http://localhost:5160/api/patient"
         );
     }
+
+    private IEnumerable<string> InjuryTypes =>
+        patients?
+            .Select(p => p.InjuryType)
+            .Distinct()
+            .OrderBy(x => x)
+        ?? Enumerable.Empty<string>();
+
+    private IEnumerable<Patient> FilteredPatients =>
+        (patients ?? Enumerable.Empty<Patient>())
+            .Where(p =>
+                (string.IsNullOrWhiteSpace(searchText) ||
+                 p.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase) ||
+                 p.Email.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+                &&
+                (string.IsNullOrWhiteSpace(selectedInjuryType) ||
+                 p.InjuryType == selectedInjuryType)
+            );
 }
