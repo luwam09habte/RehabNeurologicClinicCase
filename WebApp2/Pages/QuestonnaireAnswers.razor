@@ -66,24 +66,36 @@ else
     {
         answers[questionId] = option;
     }
-
+    
     private async Task OnClickSubmit()
     {
-        var questionnaireAnswer = new QuestionnaireAnswer
+        try
         {
-            QuestionnaireId = id,
-            PatientId = patientId,
-            SubmittedAt = DateTime.Now,
-            Answers = answers.Select(a => new QuestionAnswer
+            var questionnaireAnswer = new QuestionnaireAnswer
             {
-                QuestionId = a.Key,
-                SelectedOption = a.Value
-            }).ToList()
-        };
+                QuestionnaireId = id,
+                PatientId = patientId,
+                SubmittedAt = DateTime.Now,
+                Answers = answers.Select(a => new QuestionAnswer
+                {
+                    QuestionId = a.Key,
+                    SelectedOption = a.Value
+                }).ToList()
+            };
 
-        await Http.PostAsJsonAsync("http://localhost:5160/api/questionnaireanswer/submit", questionnaireAnswer);
+            var response = await Http.PostAsJsonAsync("http://localhost:5160/api/questionnaireanswer/submit", questionnaireAnswer);
+        
+            Console.WriteLine($"PatientId: {patientId}");
+            Console.WriteLine($"Status: {response.StatusCode}");
+            Console.WriteLine($"Antal svar: {answers.Count}");
 
-        ShowPopup = true;
+            ShowPopup = true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Fejl: {ex.Message}");
+            ShowPopup = true; // vis popup selv ved fejl så ClosePopup kan kaldes
+        }
     }
 
     private void ClosePopup()

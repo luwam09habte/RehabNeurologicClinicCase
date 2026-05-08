@@ -16,6 +16,16 @@ public class MongoQuestionnaireAnswerRepository : IQuestionnaireAnswerRepository
 
     public void SubmitAnswer(QuestionnaireAnswer answer)
     {
+        int newId = 1;
+        var alle = _collection.Find(_ => true).ToList();
+
+        foreach (var a in alle)
+        {
+            if (a.Id >= newId)
+                newId = a.Id + 1;
+        }
+
+        answer.Id = newId;
         _collection.InsertOne(answer);
     }
 
