@@ -29,12 +29,10 @@
 
     public async Task OnClickLogin()
     {
-        // Kalder på Validate endpoint med API
         var response = await Http.PostAsJsonAsync(
             $"http://localhost:5160/api/patient/validate?email={email}&password={password}",
-            new {}
+            new { }
         );
-
 
         if (response.IsSuccessStatusCode)
         {
@@ -45,14 +43,12 @@
                 await localStorage.SetItemAsync("Patient", loggedIn);
                 Nav.NavigateTo("/QuestonnaireOverview", true);
             }
-            else
-            {
-                errorText = "Forkert email eller adgangskode - Prøv igen";
-            }
         }
         else
         {
-            errorText = "Kunne ikke kontakte serveren";
+            errorText = "Forkert email eller adgangskode - Prøv igen";
         }
+
     }
+
 }

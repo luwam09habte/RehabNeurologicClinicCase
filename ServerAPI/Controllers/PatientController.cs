@@ -23,8 +23,13 @@ public class PatientController : ControllerBase
     }
 
     [HttpPost("Validate")]
-    public Patient? Validate(string email, string password)
+    public ActionResult<Patient> Validate(string email, string password)
     {
-        return FakePatientRepository.Validate(email, password);
+        var patient = FakePatientRepository.Validate(email, password);
+
+        if (patient == null)
+            return NotFound();
+
+        return Ok(patient);
     }
 }
