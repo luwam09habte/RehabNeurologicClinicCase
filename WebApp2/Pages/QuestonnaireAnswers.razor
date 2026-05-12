@@ -27,21 +27,31 @@ else
 {
     <h3>@questionnaire.Title</h3>
 
-    @foreach (var q in questionnaire.Questions)
-    {
-        <div>
-            <p>@q.Text</p>
+    <div class="questionnaire">
+        @foreach (var q in questionnaire.Questions)
+        {
+            <div class="question-row">
+                <p class="question-text">@q.Text</p>
 
-            @foreach (var option in q.Option)
-            {
-                <label>
-                    <input type="radio" name="@q.QuestionId" value="@option" 
-                           @onchange="() => SaveAnswer(q.QuestionId, option)" />
-                    @option
-                </label>
-            }
-        </div>
-    }
+                <div class="options">
+                    <div class="scale-labels">
+                        <span>Aldrig</span>
+                        <span>Altid</span>
+                    </div>
+                    <div class="radio-buttons">
+                        @foreach (var option in q.Option)
+                        {
+                            <label class="option-label">
+                                <input type="radio" name="@q.QuestionId" value="@option"
+                                       @onchange="() => SaveAnswer(q.QuestionId, option)"/>
+                                @option
+                            </label>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 }
 <button class="submitbtn" @onclick="OnClickSubmit">Send</button>
 
