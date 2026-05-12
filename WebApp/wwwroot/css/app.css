@@ -154,3 +154,31 @@ code {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
 }
+
+/* Admin Response Page */
+.dashboard-card {
+    background-color: var(--card);
+    border-radius: 14px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.form-overlay {
+    border: 1px solid #dde3ea;
+    border-radius: 14px;
+    padding: 1.5rem;
+    background-color: var(--card);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    margin-bottom: 1.5rem;
+}
+
+.btn-annuller {
+    background-color: var(--nav-bg);
+    color: var(--text);
+    border: none;
+    border-radius: 8px;
+}
+
+.btn-annuller:hover {
+    background-color: #dde3ea;
+}

@@ -3,48 +3,63 @@
 @layout MainLayout
 @inject HttpClient Http
 
-<h3>Spørgeskemaer</h3>
+<h3>Tilføj Spørgeskema Her:</h3>
 
-<div class="dashboard-card mb-3">
+<button class="btn btn-primary mb-3" @onclick="ToggleForm">+ Nyt Spørgeskema</button>
 
-    <input class="form-control mb-3"
-           placeholder="Titel på spørgeskema"
-           @bind="questionnaire.Title" />
-
-    <button class="btn btn-primary mb-3"
-            @onclick="AddQuestion">
-        Tilføj spørgsmål
-    </button>
-
-</div>
-
-@foreach (var q in questionnaire.Questions)
+@if (showForm)
 {
-    <div class="dashboard-card mb-2">
+    <div class="form-overlay mb-3">
 
         <input class="form-control mb-3"
-               placeholder="Skriv spørgsmål"
-               @bind="q.Text" />
+               placeholder="Titel på spørgeskema"
+               @bind="questionnaire.Title" />
 
-        <p>Svarmuligheder:</p>
-
-        @foreach (var option in q.Option)
+        <p>Vælg skadetyper:</p>
+        @foreach (var injury in availableInjuryTypes)
         {
-            <span class="me-2">@option</span>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox"
+                       id="@injury"
+                       checked="@questionnaire.InjuryTypes.Contains(injury)"
+                       @onchange="() => ToggleInjuryType(injury)" />
+                <label class="form-check-label" for="@injury">
+                    @injury
+                </label>
+            </div>
         }
 
-    </div>
-}
+        <button class="btn btn-primary mb-3 mt-3" @onclick="AddQuestion">Tilføj spørgsmål</button>
 
-<button class="btn btn-success"
-        @onclick="SaveQuestionnaire">
-    Gem spørgeskema
-</button>
+        @foreach (var q in questionnaire.Questions)
+        {
+            <div class="dashboard-card mb-2">
 
-@if (!string.IsNullOrEmpty(successMessage))
-{
-    <div class="alert alert-success mt-3">
-        @successMessage
+                <input class="form-control mb-3"
+                       placeholder="Skriv spørgsmål"
+                       @bind="q.Text" />
+
+                <p>Svarmuligheder:</p>
+
+                @foreach (var option in q.Option)
+                {
+                    <span class="me-2">@option</span>
+                }
+
+            </div>
+        }
+
+        <button class="btn btn-success mt-3" @onclick="SaveQuestionnaire">Gem spørgeskema</button>
+
+        <button class="btn btn-annuller mt-3 ms-2" @onclick="ToggleForm">Annuller</button>
+
+        @if (!string.IsNullOrEmpty(successMessage))
+        {
+            <div class="alert alert-success mt-3">
+                @successMessage
+            </div>
+        }
+
     </div>
 }
 
@@ -64,6 +79,8 @@ else
 
             <p>Antal spørgsmål: @q.Questions.Count</p>
 
+            <p>Skadetyper: @string.Join(", ", q.InjuryTypes)</p>
+
         </div>
     }
 }
@@ -76,8 +93,23 @@ else
     };
 
     private List<Questionnaire> questionnaires = new();
-
     private string successMessage = string.Empty;
+    private bool showForm = false;
+
+    private List<string> availableInjuryTypes = new List<string>
+    {
+        "Covid-19",
+        "Stress",
+        "Hjerneskade/tbi",
+        "Hjernerystelse",
+        "Alzheimers"
+    };
+
+    void ToggleForm()
+    {
+        showForm = !showForm;
+        successMessage = string.Empty;
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -85,18 +117,19 @@ else
             "http://localhost:5160/api/questionnaire");
     }
 
+    void ToggleInjuryType(string injury)
+    {
+        if (questionnaire.InjuryTypes.Contains(injury))
+            questionnaire.InjuryTypes.Remove(injury);
+        else
+            questionnaire.InjuryTypes.Add(injury);
+    }
+
     void AddQuestion()
     {
         questionnaire.Questions.Add(new Question
         {
-            Option = new List<string>
-            {
-                "1",
-                "2",
-                "3",
-                "4",
-                "5"
-            }
+            Option = new List<string> { "1", "2", "3", "4", "5" }
         });
     }
 
@@ -106,16 +139,6 @@ else
             "http://localhost:5160/api/questionnaire",
             questionnaire);
 
-        if (response.IsSuccessStatusCode)
-        {
-            successMessage = "Spørgeskema gemt";
-
-            questionnaires = await Http.GetFromJsonAsync<List<Questionnaire>>("http://localhost:5160/api/questionnaire");
-
-            questionnaire = new Questionnaire
-            {
-                Questions = new List<Question>()
-            };
-        }
     }
+
 }
