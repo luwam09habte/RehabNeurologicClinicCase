@@ -11,7 +11,8 @@ builder.Services.AddControllers();
 // Injecter den rigtige klasse for IUserRepository
 builder.Services.AddSingleton<IPatientRepository, FakePatientRepository>();
 builder.Services.AddSingleton<IAdminRepository, FakeAdminRepository>();
-builder.Services.AddSingleton<IQuestionnaireRepository, FakeQuestionnaireRepository>();
+/*builder.Services.AddSingleton<IQuestionnaireRepository, FakeQuestionnaireRepository>();*/
+builder.Services.AddSingleton<IQuestionnaireRepository, MongoQuestionnaireRepository>();
 /*builder.Services.AddSingleton<IQuestionnaireAnswerRepository, FakeQuestionnaireAnswerRepository>();*/
 builder.Services.AddSingleton<IQuestionnaireAnswerRepository, MongoQuestionnaireAnswerRepository>();
 /*builder.Services.Configure<MongoDBSettings>(

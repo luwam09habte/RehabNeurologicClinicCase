@@ -33,7 +33,7 @@ else
                 <td>@a.SubmittedAt.ToShortDateString()</td>
                 <td>
                     <button class="btn btn-link"
-                            @onclick="@(() => Nav.NavigateTo($"/admin/answers/{a.Id}"))">
+                            @onclick="@(() => Nav.NavigateTo($"admin/answers/{a.Id}"))">
                         Se detaljer
                     </button>
                 </td>
@@ -44,10 +44,10 @@ else
 }
 
 @code {
-    private List<QuestionnaireAnswer>? allAnswers;
+    private List<Core.Models.QuestionnaireAnswer>? allAnswers;
 
     protected override async Task OnInitializedAsync()
     {
-        allAnswers = await Http.GetFromJsonAsync<List<QuestionnaireAnswer>>("http://localhost:5160/api/questionnaire");
+        allAnswers = await Http.GetFromJsonAsync<List<Core.Models.QuestionnaireAnswer>>("http://localhost:5160/api/questionnaire");
     }
 }

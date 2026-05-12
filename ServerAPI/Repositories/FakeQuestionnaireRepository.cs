@@ -1,5 +1,6 @@
 using Core.Models;
 using ServerAPI.Interfaces;
+
 namespace ServerAPI.Repositories;
 
 // Constructor med en masse hard coded data til spørgeskema
@@ -89,6 +90,11 @@ public class FakeQuestionnaireRepository : IQuestionnaireRepository
     public Questionnaire GetById(int id)
     {
         return _questionnaires.FirstOrDefault(q => q.QuestionnaireId == id);
+    }
+
+    public void CreateQuestionnaire(Questionnaire questionnaire)
+    {
+        throw new NotImplementedException();
     }
 }
 

@@ -1,0 +1,121 @@
+@page "/admin/response"
+@using Core.Models
+@layout MainLayout
+@inject HttpClient Http
+
+<h3>Spørgeskemaer</h3>
+
+<div class="dashboard-card mb-3">
+
+    <input class="form-control mb-3"
+           placeholder="Titel på spørgeskema"
+           @bind="questionnaire.Title" />
+
+    <button class="btn btn-primary mb-3"
+            @onclick="AddQuestion">
+        Tilføj spørgsmål
+    </button>
+
+</div>
+
+@foreach (var q in questionnaire.Questions)
+{
+    <div class="dashboard-card mb-2">
+
+        <input class="form-control mb-3"
+               placeholder="Skriv spørgsmål"
+               @bind="q.Text" />
+
+        <p>Svarmuligheder:</p>
+
+        @foreach (var option in q.Option)
+        {
+            <span class="me-2">@option</span>
+        }
+
+    </div>
+}
+
+<button class="btn btn-success"
+        @onclick="SaveQuestionnaire">
+    Gem spørgeskema
+</button>
+
+@if (!string.IsNullOrEmpty(successMessage))
+{
+    <div class="alert alert-success mt-3">
+        @successMessage
+    </div>
+}
+
+<h4 class="mt-4">Eksisterende spørgeskemaer</h4>
+
+@if (questionnaires == null || questionnaires.Count == 0)
+{
+    <p>Ingen spørgeskemaer fundet</p>
+}
+else
+{
+    @foreach (var q in questionnaires)
+    {
+        <div class="dashboard-card mb-2">
+
+            <h5>@q.Title</h5>
+
+            <p>Antal spørgsmål: @q.Questions.Count</p>
+
+        </div>
+    }
+}
+
+@code {
+
+    private Questionnaire questionnaire = new Questionnaire
+    {
+        Questions = new List<Question>()
+    };
+
+    private List<Questionnaire> questionnaires = new();
+
+    private string successMessage = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        questionnaires = await Http.GetFromJsonAsync<List<Questionnaire>>(
+            "http://localhost:5160/api/questionnaire");
+    }
+
+    void AddQuestion()
+    {
+        questionnaire.Questions.Add(new Question
+        {
+            Option = new List<string>
+            {
+                "1",
+                "2",
+                "3",
+                "4",
+                "5"
+            }
+        });
+    }
+
+    async Task SaveQuestionnaire()
+    {
+        var response = await Http.PostAsJsonAsync(
+            "http://localhost:5160/api/questionnaire",
+            questionnaire);
+
+        if (response.IsSuccessStatusCode)
+        {
+            successMessage = "Spørgeskema gemt";
+
+            questionnaires = await Http.GetFromJsonAsync<List<Questionnaire>>("http://localhost:5160/api/questionnaire");
+
+            questionnaire = new Questionnaire
+            {
+                Questions = new List<Question>()
+            };
+        }
+    }
+}

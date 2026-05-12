@@ -6,4 +6,5 @@ public interface IQuestionnaireRepository
 {
     List<Questionnaire> GetQuestionnaires();
     Questionnaire GetById(int id);
+    void CreateQuestionnaire(Questionnaire questionnaire);
 }
