@@ -13,4 +13,7 @@ public class Questionnaire
     public List<Question> Questions { get; set; } = new();
 
     public int PatientId { get; set; }
+    /* For injurytype men bliver ikke taget fat i*/
+    public List<string> InjuryTypes { get; set; } = new();
+    
 }
