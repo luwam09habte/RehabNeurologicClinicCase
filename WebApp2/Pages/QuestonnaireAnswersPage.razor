@@ -99,12 +99,17 @@ else
             Console.WriteLine($"Status: {response.StatusCode}");
             Console.WriteLine($"Antal svar: {answers.Count}");
 
+            // gem det besvarede id i localStorage kun hvis det lykkedes
+            var answered = await localStorage.GetItemAsync<List<int>>("answeredIds") ?? new List<int>();
+            answered.Add(id);
+            await localStorage.SetItemAsync("answeredIds", answered);
+
             ShowPopup = true;
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Fejl: {ex.Message}");
-            ShowPopup = true; // vis popup selv ved fejl så ClosePopup kan kaldes
+            ShowPopup = true;
         }
     }
 

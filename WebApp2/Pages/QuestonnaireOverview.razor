@@ -3,6 +3,8 @@
 @layout MainLayout2
 @inject HttpClient Http
 @inject NavigationManager Nav
+@using Blazored.LocalStorage
+@inject ILocalStorageService localStorage
 
 <h5>Mine tilgængelige Spørgeskemaer</h5>
 
@@ -25,8 +27,18 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        questionnaires = await Http.GetFromJsonAsync<List<Questionnaire>>(
+        var alleSpørgeskemaer = await Http.GetFromJsonAsync<List<Questionnaire>>(
             "http://localhost:5160/api/questionnaire");
+
+        var answeredIds = await localStorage.GetItemAsync<List<int>>("answeredIds") ?? new List<int>();
+
+        questionnaires = new List<Questionnaire>();
+
+        foreach (var q in alleSpørgeskemaer)
+        {
+            if (!answeredIds.Contains(q.QuestionnaireId))
+                questionnaires.Add(q);
+        }
     }
 
     void GoTo(int id)

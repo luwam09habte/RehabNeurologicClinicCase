@@ -22,7 +22,8 @@ public class MongoQuestionnaireRepository : IQuestionnaireRepository
             .Find(q => q.QuestionnaireId == id)
             .FirstOrDefault();
     }
-
+    
+    // Giver hvert spørgeskema et unikt ID
     public void CreateQuestionnaire(Questionnaire questionnaire)
     {
         int newId = 1;
@@ -37,12 +38,14 @@ public class MongoQuestionnaireRepository : IQuestionnaireRepository
 
         questionnaire.QuestionnaireId = newId;
         
+        // Giv hvert spørgsmål et unikt ID
         int questionId = 1;
         foreach (var question in questionnaire.Questions)
         {
             question.QuestionId = questionId;
             questionId++;
         }
+        
         _collection.InsertOne(questionnaire);
     }
     
