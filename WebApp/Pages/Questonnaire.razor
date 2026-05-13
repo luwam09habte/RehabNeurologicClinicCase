@@ -1,5 +1,6 @@
 @page "/admin/response"
 @using Core.Models
+@using MongoDB.Bson.Serialization.Serializers
 @layout MainLayout
 @inject HttpClient Http
 
@@ -136,9 +137,20 @@ else
     async Task SaveQuestionnaire()
     {
         var response = await Http.PostAsJsonAsync(
-            "http://localhost:5160/api/questionnaire",
-            questionnaire);
+            "http://localhost:5160/api/questionnaire", questionnaire);
 
+        if (response.IsSuccessStatusCode)
+        {
+            successMessage = "Spørgeskema gemt!";
+            questionnaires.Add(questionnaire);
+            questionnaire = new Questionnaire
+            {
+                Questions = new List<Question>()
+            };
+        }
+        else
+        {
+            successMessage = "Fejl ved gemning af spørgeskema.";
+        }
     }
-
 }
