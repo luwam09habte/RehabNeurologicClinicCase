@@ -16,4 +16,5 @@ public class Questionnaire
     /* For injurytype men bliver ikke taget fat i*/
     public List<string> InjuryTypes { get; set; } = new();
     
+    /* Måske den her - public DateTime CreatedAt { get; set; }*/
 }

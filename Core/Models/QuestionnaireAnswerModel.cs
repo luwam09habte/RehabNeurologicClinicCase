@@ -13,4 +13,12 @@ public class QuestionnaireAnswerModel
     public DateTime SubmittedAt { get; set; } = DateTime.Now;
 
     public List<QuestionAnswer> Answers { get; set; }
+    
+    
+    public bool IsCompleted { get; set; } = true;
+    
+    //bedrings score//
+    public int Score { get; set; }
+    
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 }
