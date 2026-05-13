@@ -1,0 +1,107 @@
+@page "/admin/answers"
+@using Core.Models
+@inject HttpClient Http
+@inject NavigationManager Nav
+
+<h3 class="mb-4">Besvarelser</h3>
+
+<!-- søg + filter -->
+<div class="row mb-4 g-2">
+    <div class="col-md-8">
+        <input class="form-control"
+               placeholder="Søg efter patient navn..."
+               @bind="searchText" />
+    </div>
+
+    <div class="col-md-4">
+        <select class="form-select" @bind="selectedInjuryType">
+            <option value="">Alle skadetyper</option>
+            @foreach (var type in InjuryTypes)
+            {
+                <option value="@type">@type</option>
+            }
+        </select>
+    </div>
+</div>
+
+@if (allAnswers == null || patients == null)
+{
+    <p>Indlæser...</p>
+}
+else if (!FilteredAnswers.Any())
+{
+    <p>Ingen besvarelser fundet.</p>
+}
+else
+{
+    <table class="table table-hover align-middle">
+        <thead>
+            <tr>
+                <th>Patient</th>
+                <th>Skadetype</th>
+                <th>Dato</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var a in FilteredAnswers)
+            {
+                var patient = GetPatient(a.PatientId);
+
+                <tr>
+                    <td>@patient?.Name</td>
+                    <td>@patient?.InjuryType</td>
+                    <td>@a.SubmittedAt.ToShortDateString()</td>
+                    <td>
+                        <button class="btn btn-link p-0"
+                                @onclick="@(() => Nav.NavigateTo("admin/answers/" + a.Id))">
+                            Se detaljer
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<QuestionnaireAnswerModel>? allAnswers;
+    private List<Patient>? patients;
+    private string searchText = "";
+    private string selectedInjuryType = "";
+
+    
+    protected override async Task OnInitializedAsync()
+    { patients = await Http.GetFromJsonAsync<List<Patient>>(
+            "http://localhost:5160/api/patient");
+
+        allAnswers = await Http.GetFromJsonAsync<List<QuestionnaireAnswerModel>>(
+            "http://localhost:5160/api/questionnaireanswer");
+    }
+
+    private Patient? GetPatient(int patientId) =>
+        patients?.FirstOrDefault(p => p.PatientId == patientId);
+
+    private List<string> InjuryTypes =>
+        patients == null
+            ? new List<string>()
+            : patients
+                .Select(p => p.InjuryType)
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Distinct()
+                .ToList();
+
+    private IEnumerable<QuestionnaireAnswerModel> FilteredAnswers =>
+        (allAnswers ?? Enumerable.Empty<QuestionnaireAnswerModel>())
+        .Where(a =>
+        {
+            var patient = GetPatient(a.PatientId);
+
+            return
+                (string.IsNullOrWhiteSpace(searchText)
+                    || patient?.Name?.Contains(searchText, StringComparison.OrdinalIgnoreCase) == true)
+                &&
+                (string.IsNullOrWhiteSpace(selectedInjuryType)
+                    || patient?.InjuryType == selectedInjuryType);
+        });
+}

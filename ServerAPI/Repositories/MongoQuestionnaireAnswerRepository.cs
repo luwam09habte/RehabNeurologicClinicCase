@@ -5,16 +5,16 @@ using MongoDB.Bson.Serialization;
 
 public class MongoQuestionnaireAnswerRepository : IQuestionnaireAnswerRepository
 {
-    private readonly IMongoCollection<QuestionnaireAnswer> _collection;
+    private readonly IMongoCollection<QuestionnaireAnswerModel> _collection;
 
     public MongoQuestionnaireAnswerRepository(IConfiguration config)
     {
         var client = new MongoClient(config["Mongo:ConnectionString"]);
         var db = client.GetDatabase(config["Mongo:Database"]);
-        _collection = db.GetCollection<QuestionnaireAnswer>("answers");
+        _collection = db.GetCollection<QuestionnaireAnswerModel>("answers");
     }
 
-    public void SubmitAnswer(QuestionnaireAnswer answer)
+    public void SubmitAnswer(QuestionnaireAnswerModel answerModel)
     {
         int newId = 1;
         var alle = _collection.Find(_ => true).ToList();
@@ -25,11 +25,11 @@ public class MongoQuestionnaireAnswerRepository : IQuestionnaireAnswerRepository
                 newId = a.Id + 1;
         }
 
-        answer.Id = newId;
-        _collection.InsertOne(answer);
+        answerModel.Id = newId;
+        _collection.InsertOne(answerModel);
     }
 
-    public List<QuestionnaireAnswer> GetAll()
+    public List<QuestionnaireAnswerModel> GetAll()
     {
         return _collection.Find(_ => true).ToList();
     }

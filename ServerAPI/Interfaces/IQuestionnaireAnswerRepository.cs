@@ -4,6 +4,6 @@ namespace ServerAPI.Interfaces;
 
 public interface IQuestionnaireAnswerRepository
 {
-    void SubmitAnswer(QuestionnaireAnswer answer);
-    List<QuestionnaireAnswer> GetAll();
+    void SubmitAnswer(QuestionnaireAnswerModel answerModel);
+    List<QuestionnaireAnswerModel> GetAll();
 }

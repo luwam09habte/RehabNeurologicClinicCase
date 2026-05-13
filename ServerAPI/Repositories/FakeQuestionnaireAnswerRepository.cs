@@ -5,13 +5,13 @@ namespace ServerAPI.Repositories;
 
 public class FakeQuestionnaireAnswerRepository : IQuestionnaireAnswerRepository
 {
-    private List<QuestionnaireAnswer> _answers = new();
+    private List<QuestionnaireAnswerModel> _answers = new();
 
-    public void SubmitAnswer(QuestionnaireAnswer answer)
+    public void SubmitAnswer(QuestionnaireAnswerModel answerModel)
     {
-        _answers.Add(answer);
+        _answers.Add(answerModel);
     }
-    public List<QuestionnaireAnswer> GetAll()
+    public List<QuestionnaireAnswerModel> GetAll()
     {
         return _answers;
     }

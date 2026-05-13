@@ -16,18 +16,18 @@ public class QuestionnaireAnswerController : ControllerBase
     }
 
     [HttpPost("submit")]
-    public ActionResult SubmitQuestionnaire([FromBody] QuestionnaireAnswer answer)
+    public ActionResult SubmitQuestionnaire([FromBody] QuestionnaireAnswerModel answerModel)
     {
-        if (answer == null)
+        if (answerModel == null)
             return BadRequest();
 
-        _repository.SubmitAnswer(answer);
+        _repository.SubmitAnswer(answerModel);
 
         return Ok();
     }
     
     [HttpGet]
-    public ActionResult<List<QuestionnaireAnswer>> GetAll()
+    public ActionResult<List<QuestionnaireAnswerModel>> GetAll()
     {
         return Ok(_repository.GetAll());
     }
