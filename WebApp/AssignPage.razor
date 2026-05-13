@@ -1,0 +1,171 @@
+@page "/admin/assign"
+@using Core.Models
+@inject HttpClient Http
+
+<h3 class="mb-4">Tildel spørgeskema</h3>
+
+@if (patients == null || questionnaires == null)
+{
+    <p>Indlæser...</p>
+}
+else
+{
+
+    <!-- søg + filter -->
+    <div class="row mb-4 g-2">
+        <div class="col-md-8">
+            <input class="form-control"
+                   placeholder="Søg efter patient navn..."
+                   @bind="searchText"/>
+        </div>
+
+        <div class="col-md-4">
+            <select class="form-select" @bind="selectedInjuryType">
+                <option value="">Alle skadetyper</option>
+
+                @foreach (var type in InjuryTypes)
+                {
+                    <option value="@type">@type</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    <!-- patient valg -->
+    <div class="mb-4">
+        <label class="form-label">Vælg patient</label>
+
+        <select class="form-select" @bind="selectedPatientId">
+            <option value="0">Vælg patient</option>
+
+            @foreach (var patient in FilteredPatients)
+            {
+                <option value="@patient.PatientId">
+                    @patient.Name (@patient.PatientId)
+                </option>
+            }
+        </select>
+    </div>
+
+    <!-- spørgeskema -->
+    <div class="mb-4">
+        <label class="form-label">Vælg spørgeskema</label>
+
+        <select class="form-select" @bind="selectedQuestionnaireId">
+            <option value="0">Vælg spørgeskema</option>
+
+            @foreach (var questionnaire in questionnaires)
+            {
+                <option value="@questionnaire.QuestionnaireId">
+                    @questionnaire.Title
+                </option>
+            }
+        </select>
+    </div>
+
+    <!-- tidspunkt -->
+    <div class="mb-4">
+        <label class="form-label">Tidspunkt</label>
+
+        <select class="form-select" @bind="selectedTiming">
+            <option>Før behandling</option>
+            <option>Efter behandling</option>
+            <option>3 måneder efter behandling</option>
+            <option>6 måneder efter behandling</option>
+        </select>
+    </div>
+
+    <!-- forfaldsdato -->
+    <div class="mb-4">
+        <label class="form-label">Forfaldsdato</label>
+
+        <input type="date"
+               class="form-control"
+               @bind="dueDate"/>
+    </div>
+
+    <!-- knap -->
+    <button class="btn btn-primary" @onclick="AssignQuestionnaire">
+        Tildel spørgeskema
+    </button>
+
+    @if (!string.IsNullOrWhiteSpace(message))
+    {
+        <div class="alert alert-success mt-3">
+            @message
+        </div>
+    }
+}
+
+
+@code {
+
+    private List<Patient>? patients;
+    private List<Questionnaire>? questionnaires;
+
+    private string searchText = "";
+    private string selectedInjuryType = "";
+
+    private int selectedPatientId;
+    private int selectedQuestionnaireId;
+
+    private string selectedTiming = "Før behandling";
+
+    private DateTime dueDate = DateTime.Today;
+
+    private string message = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        patients = await Http.GetFromJsonAsync<List<Patient>>(
+            "http://localhost:5160/api/patient");
+
+        questionnaires = await Http.GetFromJsonAsync<List<Questionnaire>>(
+            "http://localhost:5160/api/questionnaire");
+    }
+
+    private List<string> InjuryTypes =>
+        patients == null
+            ? new List<string>()
+            : patients
+                .Select(p => p.InjuryType)
+                .Distinct()
+                .ToList();
+
+    private IEnumerable<Patient> FilteredPatients
+    {
+        get
+        {
+            if (patients == null)
+                return new List<Patient>();
+
+            var result = new List<Patient>();
+
+            foreach (var patient in patients)
+            {
+                // search
+                if (!string.IsNullOrWhiteSpace(searchText))
+                {
+                    if (!patient.Name.ToLower().Contains(searchText.ToLower()))
+                        continue;
+                }
+
+                // filter
+                if (!string.IsNullOrWhiteSpace(selectedInjuryType))
+                {
+                    if (patient.InjuryType != selectedInjuryType)
+                        continue;
+                }
+
+                result.Add(patient);
+            }
+
+            return result;
+        }
+    }
+
+    private void AssignQuestionnaire()
+    {
+        message = "Spørgeskema blev tildelt!";
+    }
+}

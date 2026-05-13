@@ -1,0 +1,13 @@
+@page "/admin/details/{id:int}"
+@using Core.Models
+@inject HttpClient Http
+@inject NavigationManager Nav
+
+<h3 class="mb-4">Detaljer</h3>
+
+<p>Besvarelse ID: @id</p>
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+}
