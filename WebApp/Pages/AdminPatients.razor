@@ -4,9 +4,84 @@
 
 <!-- DEN HER SIDE SKAL VI LIGE KIGGE PÅ -->
 
+<div class="d-flex justify-content-between align-items-center mb-4">
 
+    <h3 class="mb-0">Patienter</h3>
 
-<h3 class="mb-4">Patienter</h3>
+    <button class="btn btn-primary"
+            @onclick="OpenModal">
+        + Tilføj patient
+    </button>
+
+</div>
+
+@if (showModal)
+{
+    <div class="modal fade show d-block"
+         tabindex="-1"
+         style="background-color: rgba(0,0,0,0.5);">
+
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Opret patient</h5>
+
+                    <button type="button"
+                            class="btn-close"
+                            @onclick="CloseModal">
+                    </button>
+                </div>
+
+                <div class="modal-body">
+
+                    <input class="form-control mb-3"
+                           placeholder="Navn"
+                           @bind="newPatient.Name" />
+
+                    <input class="form-control mb-3"
+                           placeholder="Email"
+                           @bind="newPatient.Email" />
+
+                    <input class="form-control mb-3"
+                           placeholder="Telefonnummer"
+                           @bind="newPatient.PhoneNumber" />
+                    
+                    <select class="form-control mb-3"
+                            @bind="newPatient.InjuryType">
+
+                        <option value="">Vælg skadetype</option>
+
+                        @foreach (var type in InjuryTypes)
+                        {
+                            <option value="@type">@type</option>
+                        }
+                    </select>
+
+                    <input type="date"
+                           class="form-control mb-3"
+                           @bind="newPatient.InjuryDate" />
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button class="btn btn-secondary"
+                            @onclick="CloseModal">
+                        Luk
+                    </button>
+
+                    <button class="btn btn-primary"
+                            @onclick="CreatePatient">
+                        Gem patient
+                    </button>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
 
 <!-- søg + filter -->
 <div class="row mb-4 g-2">
@@ -31,12 +106,13 @@
 <div class="row g-3">
     @foreach (var p in FilteredPatients)
     {
-        <div class="col-md-6">
+        <div class="col-md-6 col-lg-4">
             <div class="card p-3 shadow-sm">
                 <h5 class="mb-1">@p.Name</h5>
                 <p class="text-muted mb-1">@p.Email</p>
                 <p class="text-muted mb-1">@p.PhoneNumber</p>
-
+                <p class="text-muted mb-1">@p.InjuryDate</p>
+                
                 <span class="badge bg-primary">@p.InjuryType</span>
             </div>
         </div>
@@ -54,22 +130,80 @@
             "http://localhost:5160/api/patient"
         );
     }
+    
+    /*Laver en sorteret liste af unikke skadetyper fra alle patienter – hvis der er data at hente*/
+    private IEnumerable<string> InjuryTypes
+    {
+        get
+        {
+            if (patients == null)
+                return Enumerable.Empty<string>();
 
-    private IEnumerable<string> InjuryTypes =>
-        patients?
-            .Select(p => p.InjuryType)
-            .Distinct()
-            .OrderBy(x => x)
-        ?? Enumerable.Empty<string>();
+            return patients
+                .Select(p => p.InjuryType)
+                .Distinct()
+                .OrderBy(x => x);
+        }
+    }
 
-    private IEnumerable<Patient> FilteredPatients =>
-        (patients ?? Enumerable.Empty<Patient>())
-            .Where(p =>
-                (string.IsNullOrWhiteSpace(searchText) ||
-                 p.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase) ||
-                 p.Email.Contains(searchText, StringComparison.OrdinalIgnoreCase))
-                &&
-                (string.IsNullOrWhiteSpace(selectedInjuryType) ||
-                 p.InjuryType == selectedInjuryType)
-            );
+    /*Til søgnning - Kigger alle patienter igennem og beholder kun dem der matcher søgning + skadetype filter*/
+
+    private IEnumerable<Patient> FilteredPatients
+    {
+        get
+        {
+            if (patients == null)
+            {
+                return new List<Patient>();
+            }
+
+            var result = new List<Patient>();
+
+            foreach (var p in patients)
+            {
+                // Tjek søgning (OrdinalIgnoreCase = ToLower)
+                bool matchesSearch = string.IsNullOrWhiteSpace(searchText)
+                                     || p.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase)
+                                     || p.Email.Contains(searchText, StringComparison.OrdinalIgnoreCase);
+
+                // Tjek filter (skadetype)
+                bool matchesInjury = string.IsNullOrWhiteSpace(selectedInjuryType)
+                                     || p.InjuryType == selectedInjuryType;
+
+                // Hvis begge passer - tilføj til listen
+                if (matchesSearch && matchesInjury)
+                {
+                    result.Add(p);
+                }
+            }
+            return result;
+        }
+    }
+    private bool showModal = false;
+
+    private Patient newPatient = new();
+
+    private void OpenModal()
+    {
+        showModal = true;
+    }
+
+    private void CloseModal()
+    {
+        showModal = false;
+    }
+
+    private async Task CreatePatient()
+    {
+        await Http.PostAsJsonAsync(
+            "http://localhost:5160/api/patient",
+            newPatient);
+
+        patients = await Http.GetFromJsonAsync<List<Patient>>(
+            "http://localhost:5160/api/patient");
+
+        newPatient = new Patient();
+
+        showModal = false;
+    }
 }
