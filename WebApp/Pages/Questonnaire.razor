@@ -24,6 +24,9 @@
                     <input class="form-control mb-3"
                            placeholder="Titel på spørgeskema"
                            @bind="questionnaire.Title"/>
+                    <input class="form-control mb-3"
+                            placeholder="Beskrivelse på spørgeskema"
+                            @bind="questionnaire.Text"/>
 
                     <p>Vælg skadetyper:</p>
                     @foreach (var injury in availableInjuryTypes)
