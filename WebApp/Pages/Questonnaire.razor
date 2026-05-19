@@ -153,6 +153,7 @@ else
 
     async Task SaveQuestionnaire()
     {
+        questionnaire.AdminId = 1;
         var response = await Http.PostAsJsonAsync(
             "http://localhost:5160/api/questionnaire", questionnaire);
 
