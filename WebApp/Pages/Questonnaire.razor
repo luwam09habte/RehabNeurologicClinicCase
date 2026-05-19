@@ -5,69 +5,71 @@
 @inject HttpClient Http
 
 <div class="d-flex justify-content-between align-items-center mb-4">
-
     <h3 class="mb-0">Tilføj Spørgeskema Her:</h3>
-
-    <button class="btn btn-primary mb3"
-            @onclick="ToggleForm">
-        + Nyt Spørgeskema</button>
-
+    <button class="btn btn-primary" @onclick="OpenModal">+ Nyt Spørgeskema</button>
 </div>
 
-@if (showForm)
+@if (showModal)
 {
-    <div class="form-overlay mb-3">
+    <div class="modal fade show d-block" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
 
-        <input class="form-control mb-3"
-               placeholder="Titel på spørgeskema"
-               @bind="questionnaire.Title" />
+                <div class="modal-header">
+                    <h5 class="modal-title">Nyt Spørgeskema</h5>
+                    <button type="button" class="btn-close" @onclick="CloseModal"></button>
+                </div>
 
-        <p>Vælg skadetyper:</p>
-        @foreach (var injury in availableInjuryTypes)
-        {
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox"
-                       id="@injury"
-                       checked="@questionnaire.InjuryTypes.Contains(injury)"
-                       @onchange="() => ToggleInjuryType(injury)" />
-                <label class="form-check-label" for="@injury">
-                    @injury
-                </label>
+                <div class="modal-body">
+                    <input class="form-control mb-3"
+                           placeholder="Titel på spørgeskema"
+                           @bind="questionnaire.Title"/>
+
+                    <p>Vælg skadetyper:</p>
+                    @foreach (var injury in availableInjuryTypes)
+                    {
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox"
+                                   id="@injury"
+                                   checked="@questionnaire.InjuryTypes.Contains(injury)"
+                                   @onchange="() => ToggleInjuryType(injury)"/>
+                            <label class="form-check-label" for="@injury">@injury</label>
+                        </div>
+                    }
+
+                    <button class="btn btn-primary mb-3 mt-3" @onclick="AddQuestion">Tilføj spørgsmål</button>
+
+                    @foreach (var q in questionnaire.Questions)
+                    {
+                        <div class="dashboard-card mb-2">
+                            <input class="form-control mb-3"
+                                   placeholder="Skriv spørgsmål"
+                                   @bind="q.Text"/>
+                            <p>Svarmuligheder:</p>
+                            @foreach (var option in q.Option)
+                            {
+                                <span class="me-2">@option</span>
+                            }
+                        </div>
+                        <button class="btn btn-secondary" @onclick="() => DeleteQuestion(q)">Slet spørgsmål</button>
+                    }
+
+                    @if (!string.IsNullOrEmpty(successMessage))
+                    {
+                        <div class="alert alert-success mt-3">@successMessage</div>
+                    }
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @onclick="CloseModal">Annuller</button>
+                    <button class="btn btn-success" @onclick="SaveQuestionnaire">Gem spørgeskema</button>
+                </div>
+
             </div>
-        }
-
-        <button class="btn btn-primary mb-3 mt-3" @onclick="AddQuestion">Tilføj spørgsmål</button>
-
-        @foreach (var q in questionnaire.Questions)
-        {
-            <div class="dashboard-card mb-2">
-
-                <input class="form-control mb-3"
-                       placeholder="Skriv spørgsmål"
-                       @bind="q.Text" />
-
-                <p>Svarmuligheder:</p>
-
-                @foreach (var option in q.Option)
-                {
-                    <span class="me-2">@option</span>
-                }
-
-            </div>
-        }
-
-        <button class="btn btn-success mt-3" @onclick="SaveQuestionnaire">Gem spørgeskema</button>
-
-        <button class="btn btn-annuller mt-3 ms-2" @onclick="ToggleForm">Annuller</button>
-
-        @if (!string.IsNullOrEmpty(successMessage))
-        {
-            <div class="alert alert-success mt-3">
-                @successMessage
-            </div>
-        }
-
+        </div>
     </div>
+
+    <div class="modal-backdrop fade show"></div>
 }
 
 <h4 class="mt-4">Eksisterende spørgeskemaer</h4>
@@ -81,13 +83,9 @@ else
     @foreach (var q in questionnaires)
     {
         <div class="dashboard-card mb-2">
-
             <h5>@q.Title</h5>
-
             <p>Antal spørgsmål: @q.Questions.Count</p>
-
             <p>Skadetyper: @string.Join(", ", q.InjuryTypes)</p>
-
         </div>
     }
 }
@@ -101,7 +99,7 @@ else
 
     private List<Questionnaire> questionnaires = new();
     private string successMessage = string.Empty;
-    private bool showForm = false;
+    private bool showModal = false;
 
     private List<string> availableInjuryTypes = new List<string>
     {
@@ -112,10 +110,14 @@ else
         "Alzheimers"
     };
 
-    void ToggleForm()
+    private void OpenModal()
     {
-        showForm = !showForm;
-        successMessage = string.Empty;
+        showModal = true;
+    }
+
+    private void CloseModal()
+    {
+        showModal = false;
     }
 
     protected override async Task OnInitializedAsync()
@@ -139,6 +141,12 @@ else
             Option = new List<string> { "1", "2", "3", "4", "5" }
         });
     }
+    
+    // Fjerner spørgsmål hvis du har tilføjet et
+    void DeleteQuestion(Question question)
+    {
+        questionnaire.Questions.Remove(question);
+    }
 
     async Task SaveQuestionnaire()
     {
@@ -160,5 +168,3 @@ else
         }
     }
 }
-
-
