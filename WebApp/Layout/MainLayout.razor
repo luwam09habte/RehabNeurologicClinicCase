@@ -1,4 +1,7 @@
-﻿@inherits LayoutComponentBase
+﻿@using Blazored.LocalStorage
+@inherits LayoutComponentBase
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
+@using Core.Models
 
 <div class="page">
     
@@ -8,7 +11,7 @@
     <div class="border-bottom p-3 d-flex justify-content-between align-items-center">
         <div>
             <h4 class="mb-0">RN Klinik Admin</h4>
-            <small class="text-muted">Velkommen, Dr. X</small>
+            <small class="text-muted">Velkommen, @adminNavn</small>
         </div>
         <a href="#" class="text-decoration-none">Log ud</a>
     </div>
@@ -47,3 +50,14 @@
     </div>
 
 </div>
+
+@code {
+    private string adminNavn = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var admin = await sessionStorage.GetItemAsync<Admin>("Admin");
+        if (admin != null)
+            adminNavn = admin.Name;
+    }
+}

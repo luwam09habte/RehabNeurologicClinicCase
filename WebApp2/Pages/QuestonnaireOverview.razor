@@ -10,6 +10,10 @@
 
 @if (questionnaires == null)
 {
+    <p>Indlæser...</p>
+}
+else if (questionnaires.Count == 0)
+{
     <p>Du har ingen tilgængelige spørgeskemaer</p>
 }
 else

@@ -1,22 +1,28 @@
 ﻿@inherits LayoutComponentBase
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@using Core.Models
 
 <div class="page">
-    
-    <!-- Alt der skal gå igen på alle sider som admin bortset fra login siden -->
-
-    <!-- TOP BAR -->
     <div class="border-bottom p-3 d-flex justify-content-between align-items-center">
         <div>
             <h2 class="mb-0">RN Klinik</h2>
-            <h4 class="text-muted">Velkommen, Patient1</h4>
+            <h4 class="text-muted">Velkommen, @patientNavn</h4>
         </div>
         <a href="#" class="text-decoration-none">Log ud</a>
     </div>
 
-    
-    <!-- PAGE CONTENT -->
     <div class="p-4">
         @Body
     </div>
-
 </div>
+
+@code {
+    private string patientNavn = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var patient = await localStorage.GetItemAsync<Patient>("Patient");
+        if (patient != null)
+            patientNavn = patient.Name;
+    }
+}
