@@ -15,4 +15,14 @@ public class FakeQuestionnaireAnswerRepository : IQuestionnaireAnswerRepository
     {
         return _answers;
     }
+
+    public QuestionnaireAnswerModel GetById(int id)
+    {
+        throw new NotImplementedException();
+    }
+    
+    public List<QuestionnaireAnswerModel> GetByPatient(int patientId)
+    {
+        throw new NotImplementedException();
+    }
 }

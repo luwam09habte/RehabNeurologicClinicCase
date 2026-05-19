@@ -33,4 +33,14 @@ public class MongoQuestionnaireAnswerRepository : IQuestionnaireAnswerRepository
     {
         return _collection.Find(_ => true).ToList();
     }
+    
+    public QuestionnaireAnswerModel GetById(int id)
+    {
+        return _collection.Find(a => a.Id == id).FirstOrDefault();
+    }
+    
+    public List<QuestionnaireAnswerModel> GetByPatient(int patientId)
+    {
+        return _collection.Find(a => a.PatientId == patientId).ToList();
+    }
 }

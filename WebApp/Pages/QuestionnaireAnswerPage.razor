@@ -54,7 +54,7 @@ else
                     <td>@a.SubmittedAt.ToShortDateString()</td>
                     <td>
                         <button class="btn btn-link p-0"
-                                @onclick="@(() => Nav.NavigateTo("admin/details/" + a.Id))">
+                                @onclick="@(() => Nav.NavigateTo($"/questionnaire/{a.QuestionnaireId}"))">
                             Se detaljer
                         </button>
                     </td>

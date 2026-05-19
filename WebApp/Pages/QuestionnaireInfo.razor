@@ -1,0 +1,67 @@
+@page "/questionnaire/{id:int}"
+@using Core.Models
+@inject HttpClient Http
+@layout MainLayout
+
+<h3>@questionnaire?.Title</h3>
+
+@if (questionnaire == null || answers == null)
+{
+    <p>Indlæser...</p>
+}
+else
+{
+    <div class="questionnaire">
+        @foreach (var q in questionnaire.Questions)
+        {
+            var answer = answers
+                .SelectMany(a => a.Answers)
+                .FirstOrDefault(a => a.QuestionId == q.QuestionId);
+
+            <div class="question-row">
+                <p class="question-text">@q.Text</p>
+
+                <div class="options">
+                    <div class="scale-labels">
+                        <span>Aldrig</span>
+                        <span>Altid</span>
+                    </div>
+
+                    <div class="radio-buttons">
+                        @foreach (var option in q.Option)
+                        {
+                            <label class="option-label disabled-option">
+                                <input type="radio"
+                                       disabled
+                                       checked="@(answer?.SelectedOption == option)" />
+                                @option
+                            </label>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    [Parameter] public int id { get; set; } // id = answerId
+
+    private Questionnaire? questionnaire;
+    private List<QuestionnaireAnswerModel>? answers;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // 1. Hent ALLE svar fra patienten der lavede denne besvarelse
+        answers = await Http.GetFromJsonAsync<List<QuestionnaireAnswerModel>>(
+            $"http://localhost:5160/api/questionnaireanswer/{id}/patientanswers");
+
+        // 2. Hent spørgeskemaet ud fra første svar
+        var first = answers?.FirstOrDefault();
+        if (first != null)
+        {
+            questionnaire = await Http.GetFromJsonAsync<Questionnaire>(
+                $"http://localhost:5160/api/questionnaire/{first.QuestionnaireId}");
+        }
+    }
+}
