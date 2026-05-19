@@ -96,5 +96,15 @@ public class FakeQuestionnaireRepository : IQuestionnaireRepository
     {
         throw new NotImplementedException();
     }
+    /*Til at redigere et eksisterende spørgeskema*/
+    public void UpdateQuestionnaire(int id, Questionnaire questionnaire)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void MarkAsAnswered(int patientId, int questionnaireId)
+    {
+        throw new NotImplementedException();
+    }
 }
 

@@ -9,10 +9,15 @@ namespace ServerAPI.Controllers;
 public class QuestionnaireAnswerController : ControllerBase
 {
     private readonly IQuestionnaireAnswerRepository _repository;
+    private readonly IQuestionnaireRepository _questionnaireRepository;
 
-    public QuestionnaireAnswerController(IQuestionnaireAnswerRepository repository)
+    
+    public QuestionnaireAnswerController(
+        IQuestionnaireAnswerRepository repository,
+        IQuestionnaireRepository questionnaireRepository)
     {
         _repository = repository;
+        _questionnaireRepository = questionnaireRepository;
     }
 
     [HttpPost("submit")]
@@ -22,6 +27,9 @@ public class QuestionnaireAnswerController : ControllerBase
             return BadRequest();
 
         _repository.SubmitAnswer(answerModel);
+
+        // FJERNER spørgeskema fra patientens tildelte liste
+        _questionnaireRepository.MarkAsAnswered(answerModel.PatientId, answerModel.QuestionnaireId);
 
         return Ok();
     }

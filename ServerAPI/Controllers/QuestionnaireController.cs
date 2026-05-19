@@ -40,4 +40,34 @@ public class QuestionnaireController : ControllerBase
     {
         return Ok(questionnaireRepository.GetQuestionnaires());
     }
+    /*Til at redigere et eksisterende spørgeskema - mangler på QuestionnairePage*/
+
+    [HttpGet("assigned/{patientId}")]
+    public ActionResult<List<Questionnaire>> GetAssignedQuestionnaires(int patientId)
+    {
+        var all = questionnaireRepository.GetQuestionnaires();
+
+        var assigned = all
+            .Where(q => q.AssignedToPatientIds.Contains(patientId))
+            .ToList();
+
+        return Ok(assigned);
+    }
+    
+    [HttpPost("assign")]
+    public IActionResult AssignQuestionnaire(int questionnaireId, int patientId)
+    {
+        var q = questionnaireRepository.GetById(questionnaireId);
+
+        if (q == null)
+            return NotFound("Spørgeskema findes ikke");
+
+        if (!q.AssignedToPatientIds.Contains(patientId))
+            q.AssignedToPatientIds.Add(patientId);
+
+        questionnaireRepository.UpdateQuestionnaire(questionnaireId, q);
+
+        return Ok(q);
+    }
+
 }

@@ -163,9 +163,27 @@ else
             return result;
         }
     }
-
-    private void AssignQuestionnaire()
+    
+    private async Task AssignQuestionnaire()
     {
-        message = "Spørgeskema blev tildelt!";
+        if (selectedPatientId == 0 || selectedQuestionnaireId == 0)
+        {
+            message = "Vælg både patient og spørgeskema";
+            return;
+        }
+
+        var response = await Http.PostAsync(
+            $"http://localhost:5160/api/questionnaire/assign?questionnaireId={selectedQuestionnaireId}&patientId={selectedPatientId}",
+            null);
+
+        if (response.IsSuccessStatusCode)
+        {
+            message = "Spørgeskema blev tildelt!";
+        }
+        else
+        {
+            message = "Fejl: kunne ikke tildele spørgeskema";
+        }
     }
+
 }

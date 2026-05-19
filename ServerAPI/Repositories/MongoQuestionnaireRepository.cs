@@ -54,4 +54,21 @@ public class MongoQuestionnaireRepository : IQuestionnaireRepository
         return _collection.Find(_ => true).ToList();
     }
     
+    /*Til at redigere et eksisterende spørgeskema - mangler på QuestionnairePage*/
+    public void UpdateQuestionnaire(int id, Questionnaire questionnaire)
+    {
+        _collection.ReplaceOne(q => q.QuestionnaireId == id, questionnaire);
+    }
+    
+    /*Så spørgeskema forsvinder når en patient har svaret*/
+
+    public void MarkAsAnswered(int patientId, int questionnaireId)
+    {
+        var q = _collection.Find(x => x.QuestionnaireId == questionnaireId).FirstOrDefault();
+        if (q == null) return;
+
+        q.AssignedToPatientIds.Remove(patientId);
+
+        _collection.ReplaceOne(x => x.QuestionnaireId == questionnaireId, q);
+    }
 }

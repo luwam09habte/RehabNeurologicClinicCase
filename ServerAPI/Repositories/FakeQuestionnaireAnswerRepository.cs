@@ -25,4 +25,9 @@ public class FakeQuestionnaireAnswerRepository : IQuestionnaireAnswerRepository
     {
         throw new NotImplementedException();
     }
+       
+    public void UpdateQuestionnaire(int id, Questionnaire questionnaire)
+    {
+        throw new NotImplementedException();
+    }
 }
