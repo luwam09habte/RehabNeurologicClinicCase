@@ -101,6 +101,7 @@ else
     private string successMessage = string.Empty;
     private bool showModal = false;
 
+    // Liste af de skadetyper, der er tilgængelige som man kan vælge
     private List<string> availableInjuryTypes = new List<string>
     {
         "Covid-19",
@@ -126,6 +127,7 @@ else
             "http://localhost:5160/api/questionnaire");
     }
 
+    // Tilføjer skadetype til spørgeskemaet
     void ToggleInjuryType(string injury)
     {
         if (questionnaire.InjuryTypes.Contains(injury))
@@ -133,7 +135,8 @@ else
         else
             questionnaire.InjuryTypes.Add(injury);
     }
-
+    
+    // Tilføjer et spørgsmål til spørgeskema
     void AddQuestion()
     {
         questionnaire.Questions.Add(new Question

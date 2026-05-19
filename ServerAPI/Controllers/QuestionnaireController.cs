@@ -17,7 +17,7 @@ public class QuestionnaireController : ControllerBase
     
 
     [HttpGet("{id}")]
-    public ActionResult<Questionnaire> GetById(int id)
+    public ActionResult<Questionnaire> GetQuestionnaireById(int id)
     {
         var questionnaire = questionnaireRepository.GetById(id);
 
