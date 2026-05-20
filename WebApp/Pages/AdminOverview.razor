@@ -1,11 +1,11 @@
 @page "/AdminOverview"
-
-<!-- MANGLER -->
+@layout MainLayout
 
 <h3 class="mb-4">Oversigt</h3>
 
 <div class="row g-3">
 
+    <!-- Aktive patienter -->
     <div class="col-md-4">
         <div class="card p-3 d-flex flex-row align-items-center gap-3">
             <div class="stat-icon bg-primary"></div>
@@ -16,6 +16,7 @@
         </div>
     </div>
 
+    <!-- Ventende spørgeskemaer -->
     <div class="col-md-4">
         <div class="card p-3 d-flex flex-row align-items-center gap-3">
             <div class="stat-icon bg-warning"></div>
@@ -26,6 +27,7 @@
         </div>
     </div>
 
+    <!-- Gennemførte denne måned -->
     <div class="col-md-4">
         <div class="card p-3 d-flex flex-row align-items-center gap-3">
             <div class="stat-icon bg-success"></div>
@@ -36,3 +38,71 @@
         </div>
     </div>
 </div>
+
+<!-- Seneste aktivitet + Kommende opgaver -->
+<div class="row mt-4 g-4">
+
+    <!-- Seneste aktivitet -->
+    <div class="col-md-6">
+        <div class="card p-3">
+            <h5 class="mb-3">Seneste aktivitet</h5>
+
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <strong>Anders Nielsen</strong> gennemførte Kognitiv funktionsvurdering
+                    <div class="text-muted small">I dag kl. 14:30</div>
+                </li>
+
+                <li class="list-group-item">
+                    <strong>Maria Jensen</strong> blev tildelt Fysisk funktionsniveau
+                    <div class="text-muted small">I går kl. 10:15</div>
+                </li>
+
+                <li class="list-group-item">
+                    <strong>Lars Andersen</strong> ny patient oprettet
+                    <div class="text-muted small">3. maj kl. 16:45</div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Kommende opgaver -->
+    <div class="col-md-6">
+        <div class="card p-3">
+            <h5 class="mb-3">Kommende opgaver</h5>
+
+            <ul class="list-group list-group-flush">
+
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>Før behandling</strong>
+                        <div class="text-muted small">1 patient</div>
+                    </div>
+                    <span>10. maj</span>
+                </li>
+
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>3-måneders opfølgning</strong>
+                        <div class="text-muted small">1 patient</div>
+                    </div>
+                    <span>15. aug.</span>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+<style>
+    .stat-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 6px;
+    }
+    .stat-number {
+        font-size: 1.6rem;
+        font-weight: bold;
+    }
+</style>

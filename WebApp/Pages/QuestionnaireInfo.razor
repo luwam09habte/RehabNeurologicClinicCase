@@ -12,6 +12,9 @@
 else
 {
     <div class="questionnaire">
+        <button class="btn btn-secondary" type="button">
+            Eksporter
+        </button>
         @foreach (var q in questionnaire.Questions)
         {
             var answer = answers
@@ -33,7 +36,7 @@ else
                             <label class="option-label disabled-option">
                                 <input type="radio"
                                        disabled
-                                       checked="@(answer?.SelectedOption == option)" />
+                                       checked="@(answer?.SelectedOption == option)"/>
                                 @option
                             </label>
                         }
