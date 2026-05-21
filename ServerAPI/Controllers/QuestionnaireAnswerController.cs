@@ -9,38 +9,61 @@ namespace ServerAPI.Controllers;
 public class QuestionnaireAnswerController : ControllerBase
 {
     private readonly IQuestionnaireAnswerRepository _repository;
-    private readonly IQuestionnaireRepository _questionnaireRepository;
 
-    
-    public QuestionnaireAnswerController(
-        IQuestionnaireAnswerRepository repository,
-        IQuestionnaireRepository questionnaireRepository)
+    public QuestionnaireAnswerController(IQuestionnaireAnswerRepository repository)
     {
         _repository = repository;
-        _questionnaireRepository = questionnaireRepository;
     }
 
-    [HttpPost("submit")]
-    public ActionResult SubmitQuestionnaire([FromBody] QuestionnaireAnswerModel answerModel)
+    // TILDEL SPØRGESKEMA
+    [HttpPost("assign")]
+    public IActionResult Assign([FromBody] QuestionnaireAnswerModel model)
     {
-        if (answerModel == null)
+        if (model == null)
+            return BadRequest("Model is null");
+
+        model.IsCompleted = false;
+        model.SubmittedAt = DateTime.MinValue;
+
+        _repository.Assign(model);
+
+        return Ok(model);
+    }
+
+    // HENT TILDELTE (ikke besvaret)
+    [HttpGet("assigned/{patientId}")]
+    public ActionResult<List<QuestionnaireAnswerModel>> GetAssigned(int patientId)
+    {
+        return Ok(_repository.GetAssigned(patientId));
+    }
+
+    // HENT HISTORIK (besvaret)
+    [HttpGet("history/{patientId}")]
+    public ActionResult<List<QuestionnaireAnswerModel>> GetHistory(int patientId)
+    {
+        return Ok(_repository.GetHistory(patientId));
+    }
+
+    // SUBMIT SVAR
+    [HttpPost("submit")]
+    public IActionResult Submit([FromBody] QuestionnaireAnswerModel model)
+    {
+        if (model == null)
             return BadRequest();
 
-        _repository.SubmitAnswer(answerModel);
-
-        // FJERNER spørgeskema fra patientens tildelte liste
-        _questionnaireRepository.MarkAsAnswered(answerModel.PatientId, answerModel.QuestionnaireId);
+        _repository.SubmitAnswer(model);
 
         return Ok();
     }
 
+    // HENT ALLE SVAR
     [HttpGet]
     public ActionResult<List<QuestionnaireAnswerModel>> GetAll()
     {
         return Ok(_repository.GetAll());
     }
 
-
+    // HENT ALLE SVAR FOR SAMME PATIENT
     [HttpGet("{answerId}/patientanswers")]
     public ActionResult<List<QuestionnaireAnswerModel>> GetAllAnswersForSamePatient(int answerId)
     {

@@ -12,7 +12,13 @@ public class Patient
     public DateTime InjuryDate { get; set; }
 
     public bool IsActive { get; set; } = true;
-    
-    /*public enum PatientPhase { get; set; }*/
+
+    /*public enum PatientPhase
+    {
+       "Før behandling",
+       "Efter behandling,
+       "3 Måneder efter",
+       "6 Måneder efter"
+    }*/
 
 }

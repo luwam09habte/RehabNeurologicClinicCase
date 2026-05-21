@@ -25,7 +25,22 @@ public class FakeQuestionnaireAnswerRepository : IQuestionnaireAnswerRepository
     {
         throw new NotImplementedException();
     }
-       
+
+    public List<QuestionnaireAnswerModel> GetAssigned(int patientId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public List<QuestionnaireAnswerModel> GetHistory(int patientId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Assign(QuestionnaireAnswerModel assignment)
+    {
+        throw new NotImplementedException();
+    }
+
     public void UpdateQuestionnaire(int id, Questionnaire questionnaire)
     {
         throw new NotImplementedException();

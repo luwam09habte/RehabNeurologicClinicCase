@@ -12,10 +12,11 @@ public class QuestionnaireAnswerModel
     public int QuestionnaireId { get; set; }
     public DateTime SubmittedAt { get; set; } = DateTime.Now;
 
-    public List<QuestionAnswer> Answers { get; set; }
+    public List<QuestionAnswer> Answers { get; set; } = new();
+    public string FollowUpType { get; set; } = "before"; // before, after, 3m, 6m
     
+    public bool IsCompleted { get; set; } = false;
     
-    public bool IsCompleted { get; set; } = true;
     
     //bedrings score//
     public int Score { get; set; }

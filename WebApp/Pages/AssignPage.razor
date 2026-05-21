@@ -99,21 +99,18 @@ else
 
 
 @code {
-
+    
+    private string selectedFollowUpType = "selectedFollowupTime";
     private List<Patient>? patients;
     private List<Questionnaire>? questionnaires;
-
     private string searchText = "";
     private string selectedInjuryType = "";
-
     private int selectedPatientId;
     private int selectedQuestionnaireId;
-
     private string selectedTiming = "Før behandling";
-
     private DateTime dueDate = DateTime.Today;
-
     private string message = "";
+    private List<QuestionnaireAnswerModel>? allAnswers;
 
     protected override async Task OnInitializedAsync()
     {
@@ -122,7 +119,11 @@ else
 
         questionnaires = await Http.GetFromJsonAsync<List<Questionnaire>>(
             "http://localhost:5160/api/questionnaire");
+
+        allAnswers = await Http.GetFromJsonAsync<List<QuestionnaireAnswerModel>>(
+            "http://localhost:5160/api/questionnaireanswer");
     }
+
 
     private List<string> InjuryTypes =>
         patients == null
@@ -172,9 +173,17 @@ else
             return;
         }
 
-        var response = await Http.PostAsync(
-            $"http://localhost:5160/api/questionnaire/assign?questionnaireId={selectedQuestionnaireId}&patientId={selectedPatientId}",
-            null);
+        var assignment = new QuestionnaireAnswerModel
+        {
+            PatientId = selectedPatientId,
+            QuestionnaireId = selectedQuestionnaireId,
+            FollowUpType = selectedFollowUpType, // fx "before"
+            IsCompleted = false
+        };
+
+        var response = await Http.PostAsJsonAsync(
+            "http://localhost:5160/api/questionnaireanswer/assign",
+            assignment);
 
         if (response.IsSuccessStatusCode)
         {
@@ -182,8 +191,10 @@ else
         }
         else
         {
-            message = "Fejl: kunne ikke tildele spørgeskema";
+            var error = await response.Content.ReadAsStringAsync();
+            message = $"Fejl: {response.StatusCode} - {error}";
         }
     }
+
 
 }

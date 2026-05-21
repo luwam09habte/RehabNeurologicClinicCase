@@ -22,7 +22,7 @@ public class MongoQuestionnaireRepository : IQuestionnaireRepository
             .Find(q => q.QuestionnaireId == id)
             .FirstOrDefault();
     }
-    
+
     // Giver hvert spørgeskema et unikt ID
     public void CreateQuestionnaire(Questionnaire questionnaire)
     {
@@ -37,7 +37,7 @@ public class MongoQuestionnaireRepository : IQuestionnaireRepository
         }
 
         questionnaire.QuestionnaireId = newId;
-        
+
         // Giver hvert spørgsmål et unikt ID
         int questionId = 1;
         foreach (var question in questionnaire.Questions)
@@ -45,30 +45,30 @@ public class MongoQuestionnaireRepository : IQuestionnaireRepository
             question.QuestionId = questionId;
             questionId++;
         }
-        
+
         _collection.InsertOne(questionnaire);
     }
-    
+
     public List<Questionnaire> GetQuestionnaires()
     {
         return _collection.Find(_ => true).ToList();
     }
-    
-    /*Til at redigere et eksisterende spørgeskema - mangler på QuestionnairePage*/
-    public void UpdateQuestionnaire(int id, Questionnaire questionnaire)
-    {
-        _collection.ReplaceOne(q => q.QuestionnaireId == id, questionnaire);
-    }
-    
-    /*Så spørgeskema forsvinder når en patient har svaret*/
-
-    public void MarkAsAnswered(int patientId, int questionnaireId)
-    {
-        var q = _collection.Find(x => x.QuestionnaireId == questionnaireId).FirstOrDefault();
-        if (q == null) return;
-
-        q.AssignedToPatientIds.Remove(patientId);
-
-        _collection.ReplaceOne(x => x.QuestionnaireId == questionnaireId, q);
-    }
 }
+
+/*Til at redigere et eksisterende spørgeskema - mangler på QuestionnairePage*//*
+public void UpdateQuestionnaire(int id, Questionnaire questionnaire)
+{
+    _collection.ReplaceOne(q => q.QuestionnaireId == id, questionnaire);
+}
+
+/*Så spørgeskema forsvinder når en patient har svaret
+
+public void MarkAsAnswered(int patientId, int questionnaireId)
+{
+    var q = _collection.Find(x => x.QuestionnaireId == questionnaireId).FirstOrDefault();
+    if (q == null) return;
+
+    q.AssignedToPatientIds.Remove(patientId);
+
+    _collection.ReplaceOne(x => x.QuestionnaireId == questionnaireId, q);
+}*/

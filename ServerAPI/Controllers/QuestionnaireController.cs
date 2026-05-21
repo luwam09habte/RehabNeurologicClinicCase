@@ -14,7 +14,7 @@ public class QuestionnaireController : ControllerBase
     {
         this.questionnaireRepository = questionnaireRepository;
     }
-    
+
 
     [HttpGet("{id}")]
     public ActionResult<Questionnaire> GetQuestionnaireById(int id)
@@ -34,15 +34,19 @@ public class QuestionnaireController : ControllerBase
 
         return Ok();
     }
-    
+
     [HttpGet]
     public ActionResult<List<Questionnaire>> GetQuestionnaires()
     {
         return Ok(questionnaireRepository.GetQuestionnaires());
     }
-    /*Til at redigere et eksisterende spørgeskema - mangler på QuestionnairePage*/
 
-    [HttpGet("assigned/{patientId}")]
+}
+
+
+/*Til at redigere et eksisterende spørgeskema - mangler på QuestionnairePage*/
+
+   /*  [HttpGet("assigned/{patientId}")]
     public ActionResult<List<Questionnaire>> GetAssignedQuestionnaires(int patientId)
     {
         var all = questionnaireRepository.GetQuestionnaires();
@@ -52,8 +56,13 @@ public class QuestionnaireController : ControllerBase
             .ToList();
 
         return Ok(assigned);
-    }
-    
+    }*/
+   
+   /* Erstater den over*/
+   
+   
+
+    /*
     [HttpPost("assign")]
     public IActionResult AssignQuestionnaire(int questionnaireId, int patientId)
     {
@@ -69,5 +78,24 @@ public class QuestionnaireController : ControllerBase
 
         return Ok(q);
     }
+    
+    [HttpPost("assign")]
+    public IActionResult Assign([FromBody] QuestionnaireAnswerModel model)
+    {
+        model.IsCompleted = false;
+        model.SubmittedAt = DateTime.MinValue;
 
-}
+        _repository.Create(model);
+
+        return Ok(model);
+    }
+    
+    [HttpGet("assigned/{patientId}")]
+    public ActionResult<List<QuestionnaireAnswerModel>> GetAssigned(int patientId)
+    {
+        return Ok(_repository
+            .GetByPatient(patientId)
+            .Where(x => !x.IsCompleted)
+            .ToList());
+    }*/
+
