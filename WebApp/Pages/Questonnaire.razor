@@ -5,7 +5,7 @@
 @inject HttpClient Http
 
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h3 class="mb-0">Tilføj Spørgeskema Her:</h3>
+    <h4 class="mb-0">Eksisterende spørgeskemaer</h4>
     <button class="btn btn-primary" @onclick="OpenModal">+ Nyt Spørgeskema</button>
 </div>
 
@@ -74,8 +74,6 @@
 
     <div class="modal-backdrop fade show"></div>
 }
-
-<h4 class="mt-4">Eksisterende spørgeskemaer</h4>
 
 @if (questionnaires == null || questionnaires.Count == 0)
 {
