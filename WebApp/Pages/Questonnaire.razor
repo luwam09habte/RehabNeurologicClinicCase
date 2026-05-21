@@ -1,71 +1,219 @@
 @page "/admin/response"
 @using Core.Models
-@using MongoDB.Bson.Serialization.Serializers
 @layout MainLayout
 @inject HttpClient Http
 
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h4 class="mb-0">Eksisterende spørgeskemaer</h4>
-    <button class="btn btn-primary" @onclick="OpenModal">+ Nyt Spørgeskema</button>
+    <h3 class="mb-0">Tilføj Spørgeskema Her:</h3>
+
+    <button class="btn btn-primary" @onclick="OpenModal">
+        + Nyt Spørgeskema
+    </button>
 </div>
 
 @if (showModal)
 {
     <div class="modal fade show d-block" tabindex="-1">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
 
                 <div class="modal-header">
                     <h5 class="modal-title">Nyt Spørgeskema</h5>
-                    <button type="button" class="btn-close" @onclick="CloseModal"></button>
+
+                    <button type="button"
+                            class="btn-close"
+                            @onclick="CloseModal">
+                    </button>
                 </div>
 
                 <div class="modal-body">
+
                     <input class="form-control mb-3"
                            placeholder="Titel på spørgeskema"
-                           @bind="questionnaire.Title"/>
-                    <input class="form-control mb-3"
-                            placeholder="Beskrivelse på spørgeskema"
-                            @bind="questionnaire.Text"/>
+                           @bind="questionnaire.Title" />
 
-                    <p>Vælg skadetyper:</p>
+                    <textarea class="form-control mb-3"
+                              placeholder="Beskrivelse på spørgeskema"
+                              @bind="questionnaire.Text">
+                    </textarea>
+
+                    <h5>Vælg skadetyper</h5>
+
                     @foreach (var injury in availableInjuryTypes)
                     {
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox"
+                            <input class="form-check-input"
+                                   type="checkbox"
                                    id="@injury"
                                    checked="@questionnaire.InjuryTypes.Contains(injury)"
-                                   @onchange="() => ToggleInjuryType(injury)"/>
-                            <label class="form-check-label" for="@injury">@injury</label>
+                                   @onchange="() => ToggleInjuryType(injury)" />
+
+                            <label class="form-check-label" for="@injury">
+                                @injury
+                            </label>
                         </div>
                     }
 
-                    <button class="btn btn-primary mb-3 mt-3" @onclick="AddQuestion">Tilføj spørgsmål</button>
+                    <hr />
+
+                    <button class="btn btn-primary mb-3"
+                            @onclick="AddQuestion">
+                        + Tilføj spørgsmål
+                    </button>
 
                     @foreach (var q in questionnaire.Questions)
                     {
-                        <div class="dashboard-card mb-2">
-                            <input class="form-control mb-3"
-                                   placeholder="Skriv spørgsmål"
-                                   @bind="q.Text"/>
-                            <p>Svarmuligheder:</p>
-                            @foreach (var option in q.Option)
-                            {
-                                <span class="me-2">@option</span>
-                            }
+                        <div class="card shadow-sm mb-4">
+
+                            <div class="card-body">
+
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h5>Spørgsmål</h5>
+
+                                    <button class="btn btn-danger btn-sm"
+                                            @onclick="() => DeleteQuestion(q)">
+                                        Slet
+                                    </button>
+                                </div>
+
+                                <input class="form-control mb-2"
+                                       placeholder="Overskrift"
+                                       @bind="q.Title" />
+
+                                <textarea class="form-control mb-3"
+                                          placeholder="Skriv spørgsmål"
+                                          @bind="q.Text">
+                                </textarea>
+
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input"
+                                           type="checkbox"
+                                           @bind="q.IsRequired" />
+
+                                    <label class="form-check-label">
+                                        Spørgsmålet er obligatorisk
+                                    </label>
+                                </div>
+
+                                <label class="form-label">
+                                    Type af spørgsmål
+                                </label>
+
+                                <select class="form-select mb-3"
+                                        value="@q.Type"
+                                        @onchange="(e) => ChangeQuestionType(q, e.Value?.ToString())">
+
+                                    <option value="Scale5">1-5</option>
+                                    <option value="Scale10">1-10</option>
+                                    <option value="YesNo">Ja / Nej</option>
+                                    <option value="Text">Tekstfelt</option>
+                                    <option value="MultipleChoice">Multiple Choice</option>
+                                    <option value="Checkbox">Checkbox</option>
+
+                                </select>
+
+                                @if (q.Type == "MultipleChoice" || q.Type == "Checkbox")
+                                {
+                                    <div class="border rounded p-3 mb-3">
+
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <h6 class="mb-0">Svarmuligheder</h6>
+
+                                            <button class="btn btn-outline-primary btn-sm"
+                                                    @onclick="() => AddOption(q)">
+                                                + Tilføj mulighed
+                                            </button>
+                                        </div>
+
+                                        @for (int i = 0; i < q.Option.Count; i++)
+                                        {
+                                            <div class="d-flex gap-2 mb-2">
+
+                                                <input class="form-control"
+                                                       placeholder="Svarmulighed"
+                                                       @bind="q.Option[i]" />
+
+                                                <button class="btn btn-outline-danger"
+                                                        @onclick="() => RemoveOption(q, i)">
+                                                    X
+                                                </button>
+
+                                            </div>
+                                        }
+
+                                    </div>
+                                }
+
+                                @if (q.Type == "Scale5" || q.Type == "Scale10" || q.Type == "YesNo")
+                                {
+                                    <div class="mb-3">
+
+                                        <h6>Automatiske svarmuligheder</h6>
+
+                                        @foreach (var option in q.Option)
+                                        {
+                                            <span class="badge bg-secondary me-2">
+                                                @option
+                                            </span>
+                                        }
+
+                                    </div>
+                                }
+
+                                <div class="border rounded p-3 mt-4">
+
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h6 class="mb-0">Ekstra tekstfelter</h6>
+
+                                        <button class="btn btn-outline-secondary btn-sm"
+                                                @onclick="() => AddTextField(q)">
+                                            + Tilføj tekstfelt
+                                        </button>
+                                    </div>
+
+                                    @foreach (var field in q.TextFields)
+                                    {
+                                        <div class="border rounded p-3 mb-3 bg-light">
+
+                                            <input class="form-control mb-2"
+                                                   placeholder="Label"
+                                                   @bind="field.Label" />
+
+                                            <input class="form-control"
+                                                   placeholder="Placeholder"
+                                                   @bind="field.Placeholder" />
+
+                                        </div>
+                                    }
+
+                                </div>
+
+                            </div>
+
                         </div>
-                        <button class="btn btn-secondary" @onclick="() => DeleteQuestion(q)">Slet spørgsmål</button>
                     }
 
                     @if (!string.IsNullOrEmpty(successMessage))
                     {
-                        <div class="alert alert-success mt-3">@successMessage</div>
+                        <div class="alert alert-success mt-3">
+                            @successMessage
+                        </div>
                     }
+
                 </div>
 
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" @onclick="CloseModal">Annuller</button>
-                    <button class="btn btn-success" @onclick="SaveQuestionnaire">Gem spørgeskema</button>
+
+                    <button class="btn btn-secondary"
+                            @onclick="CloseModal">
+                        Annuller
+                    </button>
+
+                    <button class="btn btn-success"
+                            @onclick="SaveQuestionnaire">
+                        Gem spørgeskema
+                    </button>
+
                 </div>
 
             </div>
@@ -75,6 +223,8 @@
     <div class="modal-backdrop fade show"></div>
 }
 
+<h4 class="mt-4">Eksisterende spørgeskemaer</h4>
+
 @if (questionnaires == null || questionnaires.Count == 0)
 {
     <p>Ingen spørgeskemaer fundet</p>
@@ -83,13 +233,28 @@ else
 {
     @foreach (var q in questionnaires)
     {
-        <div class="dashboard-card mb-2">
-            <h5>@q.Title</h5>
-            <p>Antal spørgsmål: @q.Questions.Count</p>
-            <p>Skadetyper: @string.Join(", ", q.InjuryTypes)</p>
-            <button class="btn btn-secondary" type="button">
-                Rediger
-            </button>
+        <div class="card shadow-sm mb-3">
+
+            <div class="card-body">
+
+                <h5>@q.Title</h5>
+
+                <p>
+                    <strong>Antal spørgsmål:</strong>
+                    @q.Questions.Count
+                </p>
+
+                <p>
+                    <strong>Skadetyper:</strong>
+                    @string.Join(", ", q.InjuryTypes)
+                </p>
+
+                <button class="btn btn-secondary">
+                    Rediger
+                </button>
+
+            </div>
+
         </div>
     }
 }
@@ -102,19 +267,27 @@ else
     };
 
     private List<Questionnaire> questionnaires = new();
+
     private string successMessage = string.Empty;
+
     private bool showModal = false;
 
-    // Liste af de skadetyper, der er tilgængelige som man kan vælge
-    private List<string> availableInjuryTypes = new List<string>
+    private List<string> availableInjuryTypes = new()
     {
         "Covid-19",
         "Stress",
         "Hjerneskade/tbi",
         "Hjernerystelse",
         "Alzheimers",
+        "TBI",
         "Slagtilfælde"
     };
+
+    protected override async Task OnInitializedAsync()
+    {
+        questionnaires = await Http.GetFromJsonAsync<List<Questionnaire>>(
+            "http://localhost:5160/api/questionnaire") ?? new();
+    }
 
     private void OpenModal()
     {
@@ -126,46 +299,123 @@ else
         showModal = false;
     }
 
-    protected override async Task OnInitializedAsync()
-    {
-        questionnaires = await Http.GetFromJsonAsync<List<Questionnaire>>(
-            "http://localhost:5160/api/questionnaire");
-    }
-
-    // Tilføjer skadetype til spørgeskemaet
-    void ToggleInjuryType(string injury)
+    private void ToggleInjuryType(string injury)
     {
         if (questionnaire.InjuryTypes.Contains(injury))
-            questionnaire.InjuryTypes.Remove(injury);
-        else
-            questionnaire.InjuryTypes.Add(injury);
-    }
-    
-    // Tilføjer et spørgsmål til spørgeskema
-    void AddQuestion()
-    {
-        questionnaire.Questions.Add(new Question
         {
-            Option = new List<string> { "1", "2", "3", "4", "5" }
-        });
+            questionnaire.InjuryTypes.Remove(injury);
+        }
+        else
+        {
+            questionnaire.InjuryTypes.Add(injury);
+        }
     }
-    
-    // Fjerner spørgsmål hvis du har tilføjet et
-    void DeleteQuestion(Question question)
+
+    private void AddQuestion()
+    {
+        var question = new Question
+        {
+            Type = "Scale5",
+            Option = new List<string>
+            {
+                "1",
+                "2",
+                "3",
+                "4",
+                "5"
+            }
+        };
+
+        questionnaire.Questions.Add(question);
+    }
+
+    private void DeleteQuestion(Question question)
     {
         questionnaire.Questions.Remove(question);
     }
 
-    async Task SaveQuestionnaire()
+    private void ChangeQuestionType(Question q, string? type)
+    {
+        q.Type = type ?? "Scale5";
+
+        switch (q.Type)
+        {
+            case "Scale5":
+                q.Option = new List<string>
+                {
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5"
+                };
+                break;
+
+            case "Scale10":
+                q.Option = Enumerable.Range(1, 10)
+                    .Select(x => x.ToString())
+                    .ToList();
+                break;
+
+            case "YesNo":
+                q.Option = new List<string>
+                {
+                    "Ja",
+                    "Nej"
+                };
+                break;
+
+            case "Text":
+                q.Option = new List<string>();
+                break;
+
+            case "MultipleChoice":
+            case "Checkbox":
+
+                if (!q.Option.Any())
+                {
+                    q.Option = new List<string>
+                    {
+                        "Svar 1"
+                    };
+                }
+
+                break;
+        }
+    }
+
+    private void AddOption(Question q)
+    {
+        q.Option.Add(string.Empty);
+    }
+
+    private void RemoveOption(Question q, int index)
+    {
+        if (index >= 0 && index < q.Option.Count)
+        {
+            q.Option.RemoveAt(index);
+        }
+    }
+
+    private void AddTextField(Question q)
+    {
+        q.TextFields.Add(new TextField());
+    }
+
+    private async Task SaveQuestionnaire()
     {
         questionnaire.AdminId = 1;
+
         var response = await Http.PostAsJsonAsync(
-            "http://localhost:5160/api/questionnaire", questionnaire);
+            "http://localhost:5160/api/questionnaire",
+            questionnaire);
 
         if (response.IsSuccessStatusCode)
         {
             successMessage = "Spørgeskema gemt!";
+
             questionnaires.Add(questionnaire);
+
             questionnaire = new Questionnaire
             {
                 Questions = new List<Question>()

@@ -43,7 +43,7 @@ else
                         {
                             <label class="option-label">
                                 <input type="radio" name="@q.QuestionId" value="@option"
-                                       @onchange="() => SubmitAnswer(q.QuestionId, option)"/>
+                                       @onchange="() => SaveAnswer(q.QuestionId, option)"/>
                                 @option
                             </label>
                         }
@@ -72,7 +72,7 @@ else
         );
     }
 
-    private void SubmitAnswer(int questionId, string option)
+    private void SaveAnswer(int questionId, string option)
     {
         answers[questionId] = option;
     }
