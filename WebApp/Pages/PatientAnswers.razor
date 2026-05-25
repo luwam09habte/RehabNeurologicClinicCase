@@ -7,7 +7,7 @@
 
 <!-- søg + filter -->
 <div class="row mb-4 g-2">
-    <div class="col-md-8">
+    <div class="col-md-4">
         <input class="form-control"
                placeholder="Søg efter patient navn..."
                @bind="searchText" />
@@ -21,6 +21,27 @@
                 <option value="@type">@type</option>
             }
         </select>
+    </div>
+
+    <div class="col-md-4">
+        <select class="form-select" @bind="selectedGender">
+            <option value="">Alle køn</option>
+            <option value="Mand">Mand</option>
+            <option value="Kvinde">Kvinde</option>
+            <option value="Andet">Andet</option>
+        </select>
+    </div>
+
+    <div class="col-md-2">
+        <input class="form-control"
+               placeholder="Min alder"
+               @bind="minAge" />
+    </div>
+
+    <div class="col-md-2">
+        <input class="form-control"
+               placeholder="Max alder"
+               @bind="maxAge" />
     </div>
 </div>
 
@@ -39,6 +60,8 @@ else
             <tr>
                 <th>Patient</th>
                 <th>Skadetype</th>
+                <th>Køn</th>
+                <th>Alder</th>
                 <th>Dato</th>
                 <th></th>
             </tr>
@@ -51,6 +74,8 @@ else
                 <tr>
                     <td>@patient?.Name</td>
                     <td>@patient?.InjuryType</td>
+                    <td>@patient?.Gender</td>
+                    <td>@patient?.Age</td>
                     <td>@a.SubmittedAt.ToShortDateString()</td>
                     <td>
                         <button class="btn btn-link p-0"
@@ -69,6 +94,9 @@ else
     private List<Patient>? patients;
     private string searchText = "";
     private string selectedInjuryType = "";
+    private string selectedGender = "";
+    private string minAge = "";
+    private string maxAge = "";
 
     
     protected override async Task OnInitializedAsync()
@@ -91,17 +119,41 @@ else
                 .Distinct()
                 .ToList();
 
-    private IEnumerable<QuestionnaireAnswerModel> FilteredAnswers =>
-        (allAnswers ?? Enumerable.Empty<QuestionnaireAnswerModel>())
-        .Where(a =>
+    private IEnumerable<QuestionnaireAnswerModel> FilteredAnswers
+    {
+        get
         {
-            var patient = GetPatient(a.PatientId);
+            var result = new List<QuestionnaireAnswerModel>();
 
-            return
-                (string.IsNullOrWhiteSpace(searchText)
-                    || patient?.Name?.Contains(searchText, StringComparison.OrdinalIgnoreCase) == true)
-                &&
-                (string.IsNullOrWhiteSpace(selectedInjuryType)
-                    || patient?.InjuryType == selectedInjuryType);
-        });
+            foreach (var a in allAnswers ?? new List<QuestionnaireAnswerModel>())
+            {
+                var p = GetPatient(a.PatientId);
+                if (p == null) continue;
+
+                if (!string.IsNullOrWhiteSpace(searchText))
+                    if (!p.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+                        continue;
+
+                if (!string.IsNullOrWhiteSpace(selectedInjuryType))
+                    if (p.InjuryType != selectedInjuryType)
+                        continue;
+
+                if (!string.IsNullOrWhiteSpace(selectedGender))
+                    if (p.Gender != selectedGender)
+                        continue;
+
+                if (!string.IsNullOrWhiteSpace(minAge))
+                    if (p.Age < int.Parse(minAge))
+                        continue;
+
+                if (!string.IsNullOrWhiteSpace(maxAge))
+                    if (p.Age > int.Parse(maxAge))
+                        continue;
+
+                result.Add(a);
+            }
+
+            return result;
+        }
+    }
 }
