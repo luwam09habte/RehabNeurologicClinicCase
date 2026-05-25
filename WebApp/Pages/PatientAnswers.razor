@@ -7,10 +7,14 @@
 
 <!-- søg + filter -->
 <div class="row mb-4 g-2">
+    <a class="btn btn-secondary" type="button" 
+       href="http://localhost:5160/api/questionnaireanswer/export">
+        Eksporter data
+    </a>
     <div class="col-md-4">
         <input class="form-control"
                placeholder="Søg efter patient navn..."
-               @bind="searchText" />
+               @bind="searchText"/>
     </div>
 
     <div class="col-md-4">
@@ -35,13 +39,13 @@
     <div class="col-md-2">
         <input class="form-control"
                placeholder="Min alder"
-               @bind="minAge" />
+               @bind="minAge"/>
     </div>
 
     <div class="col-md-2">
         <input class="form-control"
                placeholder="Max alder"
-               @bind="maxAge" />
+               @bind="maxAge"/>
     </div>
 </div>
 
