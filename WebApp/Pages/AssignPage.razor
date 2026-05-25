@@ -100,7 +100,6 @@ else
 
 @code {
     
-    private string selectedFollowUpType = "selectedFollowupTime";
     private List<Patient>? patients;
     private List<Questionnaire>? questionnaires;
     private string searchText = "";
@@ -165,6 +164,18 @@ else
         }
     }
     
+    private FollowUpType MapTiming(string timing)
+    {
+        return timing switch
+        {
+            "Før behandling" => FollowUpType.FørBehandling,
+            "Efter behandling" => FollowUpType.EfterBehandling,
+            "3 måneder efter behandling" => FollowUpType.TreMånederEfter,
+            "6 måneder efter behandling" => FollowUpType.SeksMånederEfter,
+            _ => FollowUpType.FørBehandling
+        };
+    }
+    
     private async Task AssignQuestionnaire()
     {
         if (selectedPatientId == 0 || selectedQuestionnaireId == 0)
@@ -172,12 +183,12 @@ else
             message = "Vælg både patient og spørgeskema";
             return;
         }
-
+        
         var assignment = new QuestionnaireAnswerModel
         {
             PatientId = selectedPatientId,
             QuestionnaireId = selectedQuestionnaireId,
-            FollowUpType = selectedFollowUpType, // fx "before"
+            FollowUpType = MapTiming(selectedTiming),
             IsCompleted = false
         };
 

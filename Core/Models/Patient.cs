@@ -15,13 +15,6 @@ public class Patient
 
     public int Age { get; set; } = 0;
     public string Gender { get; set; } = string.Empty;
-
-    /*public enum PatientPhase
-    {
-       "Før behandling",
-       "Efter behandling,
-       "3 Måneder efter",
-       "6 Måneder efter"
-    }*/
+    
 
 }

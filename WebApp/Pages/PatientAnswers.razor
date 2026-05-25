@@ -7,8 +7,8 @@
 
 <!-- søg + filter -->
 <div class="row mb-4 g-2">
-    <a class="btn btn-secondary" type="button" 
-       href="http://localhost:5160/api/questionnaireanswer/export">
+    <a class="btn btn-secondary"
+       href="@ExportUrl">
         Eksporter data
     </a>
     <div class="col-md-4">
@@ -28,11 +28,25 @@
     </div>
 
     <div class="col-md-4">
-        <select class="form-select" @bind="selectedGender">
-            <option value="">Alle køn</option>
-            <option value="Mand">Mand</option>
-            <option value="Kvinde">Kvinde</option>
-            <option value="Andet">Andet</option>
+        <select class="form-select"
+                @bind="selectedGender">
+
+            <option value="">
+                Alle køn
+            </option>
+
+            <option value="Mand">
+                Mand
+            </option>
+
+            <option value="Kvinde">
+                Kvinde
+            </option>
+
+            <option value="Andet">
+                Andet
+            </option>
+
         </select>
     </div>
 
@@ -47,6 +61,48 @@
                placeholder="Max alder"
                @bind="maxAge"/>
     </div>
+    
+    <div class="col-md-4">
+
+        <select class="form-select"
+                @bind="selectedStatus">
+
+            <option value="">
+                Alle forløb
+            </option>
+
+            <option value="true">
+                Afsluttede
+            </option>
+
+            <option value="false">
+                Aktive
+            </option>
+
+        </select>
+
+    </div>
+    
+    <div class="col-md-4">
+
+        <select class="form-select"
+                @bind="selectedFollowUpType">
+
+            <option value="">
+                Vælg opfølgning
+            </option>
+
+            @foreach (var type in Enum.GetValues<FollowUpType>())
+            {
+                <option value="@type">
+                    @type
+                </option>
+            }
+
+        </select>
+
+    </div>
+    
 </div>
 
 @if (allAnswers == null || patients == null)
@@ -99,8 +155,19 @@ else
     private string searchText = "";
     private string selectedInjuryType = "";
     private string selectedGender = "";
+    private string selectedStatus = "";
     private string minAge = "";
     private string maxAge = "";
+    private FollowUpType? selectedFollowUpType;
+    
+    private string ExportUrl =>
+        $"http://localhost:5160/api/questionnaireanswer/export" +
+        $"?searchText={searchText}" +
+        $"&injuryType={selectedInjuryType}" +
+        $"&gender={selectedGender}" +
+        $"&minAge={minAge}" +
+        $"&maxAge={maxAge}" +
+        $"&completed={selectedStatus}";
 
     
     protected override async Task OnInitializedAsync()
@@ -145,6 +212,39 @@ else
                 if (!string.IsNullOrWhiteSpace(selectedGender))
                     if (p.Gender != selectedGender)
                         continue;
+                
+                if (selectedFollowUpType.HasValue)
+                {
+                    if (a.FollowUpType != selectedFollowUpType.Value)
+                        continue;
+                }
+                
+                if (!string.IsNullOrWhiteSpace(selectedStatus))
+                {
+                    var samePatientAndQuestionnaire =
+                        allAnswers
+                            .Where(x =>
+                                x.PatientId == a.PatientId
+                                &&
+                                x.QuestionnaireId == a.QuestionnaireId)
+                            .ToList();
+
+                    bool hasBefore = samePatientAndQuestionnaire.Any(x => x.FollowUpType == FollowUpType.FørBehandling);
+                    bool hasAfter = samePatientAndQuestionnaire.Any(x => x.FollowUpType == FollowUpType.EfterBehandling);
+                    bool has3Months = samePatientAndQuestionnaire.Any(x => x.FollowUpType == FollowUpType.TreMånederEfter);
+                    bool has6Months = samePatientAndQuestionnaire.Any(x => x.FollowUpType == FollowUpType.SeksMånederEfter);
+
+                    bool completed =
+                        hasBefore &&
+                        hasAfter &&
+                        has3Months &&
+                        has6Months;
+
+                    bool filterValue = bool.Parse(selectedStatus);
+
+                    if (completed != filterValue)
+                        continue;
+                }
 
                 if (!string.IsNullOrWhiteSpace(minAge))
                     if (p.Age < int.Parse(minAge))

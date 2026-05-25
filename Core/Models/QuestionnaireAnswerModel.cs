@@ -3,6 +3,14 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Core.Models;
 
+public enum FollowUpType
+{
+    FørBehandling,
+    EfterBehandling,
+    TreMånederEfter,
+    SeksMånederEfter
+}
+
 public class QuestionnaireAnswerModel
 {
     [BsonId]
@@ -11,9 +19,9 @@ public class QuestionnaireAnswerModel
     public int PatientId { get; set; } = 0;
     public int QuestionnaireId { get; set; }
     public DateTime SubmittedAt { get; set; } = DateTime.Now;
+    public FollowUpType FollowUpType { get; set; }
 
     public List<QuestionAnswer> Answers { get; set; } = new();
-    public string FollowUpType { get; set; } = "before"; // before, after, 3m, 6m
     
     public bool IsCompleted { get; set; } = false;
     

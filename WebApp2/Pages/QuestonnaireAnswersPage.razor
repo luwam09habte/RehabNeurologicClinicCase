@@ -81,11 +81,18 @@ else
     {
         try
         {
+            var assigned = await Http.GetFromJsonAsync<List<QuestionnaireAnswerModel>>(
+                $"http://localhost:5160/api/questionnaireanswer/assigned/{patientId}");
+
+            var current = assigned.First(x => x.QuestionnaireId == id);
+
             var questionnaireAnswer = new QuestionnaireAnswerModel
             {
+                Id = current.Id,
                 QuestionnaireId = id,
                 PatientId = patientId,
                 SubmittedAt = DateTime.Now,
+                FollowUpType = current.FollowUpType,
                 Answers = answers.Select(a => new QuestionAnswer
                 {
                     QuestionId = a.Key,
@@ -93,16 +100,12 @@ else
                 }).ToList()
             };
 
-            var response = await Http.PostAsJsonAsync("http://localhost:5160/api/questionnaireanswer/submit", questionnaireAnswer);
-        
-            Console.WriteLine($"PatientId: {patientId}");
-            Console.WriteLine($"Status: {response.StatusCode}");
-            Console.WriteLine($"Antal svar: {answers.Count}");
+            // ✅ DENNE MANGLER HOS DIG!!
+            var response = await Http.PostAsJsonAsync(
+                "http://localhost:5160/api/questionnaireanswer/submit",
+                questionnaireAnswer);
 
-            // gem det besvarede id i localStorage kun hvis det lykkedes
-            var answered = await localStorage.GetItemAsync<List<int>>("answeredIds") ?? new List<int>();
-            answered.Add(id);
-            await localStorage.SetItemAsync("answeredIds", answered);
+            Console.WriteLine($"Status: {response.StatusCode}");
 
             ShowPopup = true;
         }
