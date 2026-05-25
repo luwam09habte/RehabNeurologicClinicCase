@@ -37,7 +37,7 @@ public class MongoQuestionnaireAnswerRepository : IQuestionnaireAnswerRepository
     {
         answer.SubmittedAt = DateTime.UtcNow;
         answer.UpdatedAt = DateTime.UtcNow;
-        answer.IsCompleted = false; // ✅ ikke afsluttet endnu
+        answer.IsCompleted = true; // ✅ ikke afsluttet endnu
 
         // ✅ 1. opdater svar (assignment bliver til besvaret)
         _collection.ReplaceOne(x => x.Id == answer.Id, answer);
