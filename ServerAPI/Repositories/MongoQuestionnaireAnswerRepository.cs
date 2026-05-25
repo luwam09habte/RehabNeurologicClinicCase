@@ -72,7 +72,7 @@ public class MongoQuestionnaireAnswerRepository : IQuestionnaireAnswerRepository
     // GET ALL
     public List<QuestionnaireAnswerModel> GetAll()
     {
-        return _collection.Find(_ => true).ToList();
+        return _collection.Find(x => x.IsCompleted == true).ToList();
     }
 
     // GET BY ID
