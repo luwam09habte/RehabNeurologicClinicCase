@@ -20,7 +20,7 @@
     <div class="col-md-4">
         <select class="form-select" @bind="selectedInjuryType">
             <option value="">Alle skadetyper</option>
-            @foreach (var type in InjuryTypes)
+            @foreach (var type in availableInjuryTypes)
             {
                 <option value="@type">@type</option>
             }
@@ -181,15 +181,17 @@ else
     private Patient? GetPatient(int patientId) =>
         patients?.FirstOrDefault(p => p.PatientId == patientId);
 
-    private List<string> InjuryTypes =>
-        patients == null
-            ? new List<string>()
-            : patients
-                .Select(p => p.InjuryType)
-                .Where(x => !string.IsNullOrWhiteSpace(x))
-                .Distinct()
-                .ToList();
-
+    private List<string> availableInjuryTypes = new()
+    {
+        "Covid-19",
+        "Stress",
+        "Hjerneskade/tbi",
+        "Hjernerystelse",
+        "Alzheimers",
+        "TBI",
+        "Slagtilfælde"
+    };
+    
     private IEnumerable<QuestionnaireAnswerModel> FilteredAnswers
     {
         get

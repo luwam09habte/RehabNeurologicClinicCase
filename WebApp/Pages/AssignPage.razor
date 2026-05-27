@@ -23,7 +23,7 @@ else
             <select class="form-select" @bind="selectedInjuryType">
                 <option value="">Alle skadetyper</option>
 
-                @foreach (var type in InjuryTypes)
+                @foreach (var type in availableInjuryTypes)
                 {
                     <option value="@type">@type</option>
                 }
@@ -123,14 +123,16 @@ else
             "http://localhost:5160/api/questionnaireanswer");
     }
 
-
-    private List<string> InjuryTypes =>
-        patients == null
-            ? new List<string>()
-            : patients
-                .Select(p => p.InjuryType)
-                .Distinct()
-                .ToList();
+    private List<string> availableInjuryTypes = new()
+    {
+        "Covid-19",
+        "Stress",
+        "Hjerneskade/tbi",
+        "Hjernerystelse",
+        "Alzheimers",
+        "TBI",
+        "Slagtilfælde"
+    };
 
     private IEnumerable<Patient> FilteredPatients
     {
