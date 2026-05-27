@@ -59,7 +59,8 @@
 
                     <input type="date"
                            class="form-control mb-3"
-                           @bind="newPatient.InjuryDate" />
+                           @bind-value="newPatient.InjuryDate"
+                           @bind-value:event="onchange" />
 
                 </div>
 
@@ -110,7 +111,11 @@
                 <h5 class="mb-1">@p.Name</h5>
                 <p class="text-muted mb-1">@p.Email</p>
                 <p class="text-muted mb-1">@p.PhoneNumber</p>
-                <p class="text-muted mb-1">@p.InjuryDate</p>
+                <p class="text-muted mb-1">
+                    @(p.InjuryDate.HasValue 
+                        ? p.InjuryDate.Value.ToString("dd.MM.yyyy") 
+                        : "Ingen dato")
+                </p>
                 
                 <span class="badge bg-primary">@p.InjuryType</span>
             </div>

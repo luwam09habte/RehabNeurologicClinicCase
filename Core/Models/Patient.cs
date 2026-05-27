@@ -9,7 +9,7 @@ public class Patient
     public string Role { get; set; } = string.Empty;
     public string PhoneNumber { get; set; } = string.Empty;
     public string InjuryType { get; set; } = string.Empty;
-    public DateTime InjuryDate { get; set; }
+    public DateTime? InjuryDate { get; set; }
 
     public bool IsActive { get; set; } = true;
 
