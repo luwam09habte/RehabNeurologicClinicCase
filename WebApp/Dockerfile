@@ -16,3 +16,4 @@ from base as final
 workdir /app
 copy --from=build /app/publish .
 entrypoint ["dotnet", "WebApp.dll"]
+
