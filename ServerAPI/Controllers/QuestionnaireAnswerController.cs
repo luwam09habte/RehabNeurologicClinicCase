@@ -81,7 +81,7 @@ public class QuestionnaireAnswerController : ControllerBase
         return Ok(patientAnswers);
     }
     
-        // ✅ EKSPORT TIL EXCEL (FIXET)
+        // EKSPORT TIL EXCEL 
         [HttpGet("export")]
         public IActionResult ExportToExcel(
             string? searchText,
@@ -91,13 +91,13 @@ public class QuestionnaireAnswerController : ControllerBase
             int? maxAge,
             bool? completed)
         {
-            // ✅ HENT data
+            // HENT data
             var answers = _repository.GetAll()
                 .Where(x => x.Answers != null && x.Answers.Any())
                 .ToList();
             var patients = _patientRepository.GetAll();
 
-            // ✅ FILTER (du kan udvide senere)
+            // FILTER 
             var filtered = answers.Where(x =>
             {
                 if (completed.HasValue && x.IsCompleted != completed.Value)
@@ -109,7 +109,7 @@ public class QuestionnaireAnswerController : ControllerBase
             using var workbook = new XLWorkbook();
             var worksheet = workbook.Worksheets.Add("Besvarelser");
 
-            // ✅ HEADERS
+            // HEADERS
             worksheet.Cell(1, 1).Value = "Navn";
             worksheet.Cell(1, 2).Value = "Køn";
             worksheet.Cell(1, 3).Value = "Skadetype";
@@ -125,7 +125,7 @@ public class QuestionnaireAnswerController : ControllerBase
 
             int row = 2;
 
-            // ✅ LOOP (HER ER MAGIEN!)
+            // LOOP IGENNEM SVAR OG UDFYLD EXCEL
             foreach (var answer in filtered)
             {
                 var patient = patients.FirstOrDefault(p => p.PatientId == answer.PatientId);
@@ -141,7 +141,7 @@ public class QuestionnaireAnswerController : ControllerBase
                     worksheet.Cell(row, 6).Value = answer.FollowUpType.ToString();
 
                     worksheet.Cell(row, 7).Value = q.QuestionId;
-                    worksheet.Cell(row, 8).Value = q.SelectedOption; // ✅ HER ER SVARET!
+                    worksheet.Cell(row, 8).Value = q.SelectedOption; // Her er svaret
 
                     worksheet.Cell(row, 9).Value = answer.SubmittedAt.ToString("dd-MM-yyyy");
 

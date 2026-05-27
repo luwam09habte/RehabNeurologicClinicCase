@@ -161,31 +161,13 @@
                                 }
 
                                 <div class="border rounded p-3 mt-4">
-
-                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <h6 class="mb-0">Ekstra tekstfelter</h6>
-
-                                        <button class="btn btn-outline-secondary btn-sm"
-                                                @onclick="() => AddTextField(q)">
-                                            + Tilføj tekstfelt
-                                        </button>
-                                    </div>
-
-                                    @foreach (var field in q.TextFields)
-                                    {
-                                        <div class="border rounded p-3 mb-3 bg-light">
-
-                                            <input class="form-control mb-2"
-                                                   placeholder="Label"
-                                                   @bind="field.Label" />
-
-                                            <input class="form-control"
-                                                   placeholder="Placeholder"
-                                                   @bind="field.Placeholder" />
-
-                                        </div>
-                                    }
-
+                                    <h6 class="mb-0">Ekstra tekstfelt</h6>
+                                    <input class="form-control mb-2"
+                                           placeholder="Label"
+                                           @bind="q.Label" />
+                                    <input class="form-control"
+                                           placeholder="Placeholder"
+                                           @bind="q.Placeholder" />
                                 </div>
 
                             </div>
@@ -394,11 +376,6 @@ else
         {
             q.Option.RemoveAt(index);
         }
-    }
-
-    private void AddTextField(Question q)
-    {
-        q.TextFields.Add(new TextField());
     }
 
     private async Task SaveQuestionnaire()

@@ -39,24 +39,24 @@ public class MongoQuestionnaireAnswerRepository : IQuestionnaireAnswerRepository
         answer.UpdatedAt = DateTime.UtcNow;
         answer.IsCompleted = true; // ✅ ikke afsluttet endnu
 
-        // ✅ 1. opdater svar (assignment bliver til besvaret)
+        // 1. opdater svar (assignment bliver til besvaret)
         _collection.ReplaceOne(x => x.Id == answer.Id, answer);
 
-        // ✅ 2. hent alle svar for samme patient + questionnaire
+        // 2. hent alle svar for samme patient + questionnaire
         var all = _collection.Find(x =>
                 x.PatientId == answer.PatientId &&
                 x.QuestionnaireId == answer.QuestionnaireId &&
                 x.SubmittedAt != DateTime.MinValue // kun besvarede
         ).ToList();
 
-        // ✅ 3. tjek om alle 4 findes
+        // 3. tjek om alle 4 findes
         bool completed =
             all.Any(x => x.FollowUpType == FollowUpType.FørBehandling) &&
             all.Any(x => x.FollowUpType == FollowUpType.EfterBehandling) &&
             all.Any(x => x.FollowUpType == FollowUpType.TreMånederEfter) &&
             all.Any(x => x.FollowUpType == FollowUpType.SeksMånederEfter);
 
-        // ✅ 4. opdater ALLE hvis færdig
+        // 4. opdater ALLE hvis færdig
         if (completed)
         {
             var filter = Builders<QuestionnaireAnswerModel>.Filter.Where(x =>

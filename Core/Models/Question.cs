@@ -11,16 +11,11 @@ public class Question
     
     public int QuestionnaireId { get; set; }
 
-    public List<TextField> TextFields { get; set; } = new();
+    public string Label { get; set; } = string.Empty;
+
+    public string Placeholder { get; set; } = string.Empty;
 
     public bool IsRequired { get; set; }
 
     public string Type { get; set; } = "Scale5";
-}
-
-public class TextField
-{
-    public string Label { get; set; } = string.Empty;
-
-    public string Placeholder { get; set; } = string.Empty;
 }

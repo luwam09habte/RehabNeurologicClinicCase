@@ -20,14 +20,7 @@ public class QuestionnaireAnswerModel
     public int QuestionnaireId { get; set; }
     public DateTime SubmittedAt { get; set; } = DateTime.Now;
     public FollowUpType FollowUpType { get; set; }
-
     public List<QuestionAnswer> Answers { get; set; } = new();
-    
     public bool IsCompleted { get; set; } = false;
-    
-    
-    //bedrings score//
-    public int Score { get; set; }
-    
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 }

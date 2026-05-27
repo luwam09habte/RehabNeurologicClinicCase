@@ -43,7 +43,7 @@ else
                         {
                             <label class="option-label">
                                 <input type="radio" name="@q.QuestionId" value="@option"
-                                       @onchange="() => SaveAnswer(q.QuestionId, option)"/>
+                                       @onchange="() => SubmitAnswer(q.QuestionId, option)"/>
                                 @option
                             </label>
                         }
@@ -81,7 +81,7 @@ else
         );
     }
 
-    private void SaveAnswer(int questionId, string option)
+    private void SubmitAnswer(int questionId, string option)
     {
         answers[questionId] = option;
     }
@@ -103,8 +103,7 @@ else
                     SelectedOption = a.Value
                 }).ToList()
             };
-
-            // ✅ DENNE MANGLER HOS DIG!!
+            
             var response = await Http.PostAsJsonAsync(
                 "http://localhost:5160/api/questionnaireanswer/submit",
                 questionnaireAnswer);
