@@ -11,8 +11,4 @@ public class Questionnaire
     public int AdminId { get; set; }
     public List<string> InjuryTypes { get; set; } = new();
     public List<Question> Questions { get; set; } = new();
-    public List<int> AssignedToPatientIds { get; set; } = new();
-    
-    /*Så det kan tildelses på patientID
-    public List<int> AssignedToPatientIds { get; set; } = new();*/
 }
