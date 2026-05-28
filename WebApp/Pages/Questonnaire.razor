@@ -267,7 +267,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         questionnaires = await Http.GetFromJsonAsync<List<Questionnaire>>(
-            "http://localhost:5160/api/questionnaire") ?? new();
+            "api/questionnaire") ?? new();
     }
 
     private void OpenModal()
@@ -383,7 +383,7 @@ else
         questionnaire.AdminId = 1;
 
         var response = await Http.PostAsJsonAsync(
-            "http://localhost:5160/api/questionnaire",
+            "api/questionnaire",
             questionnaire);
 
         if (response.IsSuccessStatusCode)

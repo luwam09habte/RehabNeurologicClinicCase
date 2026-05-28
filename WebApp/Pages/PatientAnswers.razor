@@ -160,7 +160,7 @@ else
     private string selectedFollowUpType = "";
     
     private string ExportUrl =>
-        $"http://localhost:5160/api/questionnaireanswer/export" +
+        $"https://rnkliniksl.azurewebsites.net/api/questionnaireanswer/export" +
         $"?searchText={searchText}" +
         $"&injuryType={selectedInjuryType}" +
         $"&gender={selectedGender}" +
@@ -171,10 +171,10 @@ else
     // Henter alle svar fra patienter
     protected override async Task OnInitializedAsync()
     { patients = await Http.GetFromJsonAsync<List<Patient>>(
-            "http://localhost:5160/api/patient");
+            "api/patient");
 
         allAnswers = await Http.GetFromJsonAsync<List<QuestionnaireAnswerModel>>(
-            "http://localhost:5160/api/questionnaireanswer");
+            "api/questionnaireanswer");
     }
 
     private Patient? GetPatient(int patientId) =>

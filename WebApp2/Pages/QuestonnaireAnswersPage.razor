@@ -68,7 +68,7 @@ else
         patientId = patient.PatientId;
         
         questionnaire = await Http.GetFromJsonAsync<Questionnaire>(
-            $"http://localhost:5160/api/questionnaire/{id}"
+            $"api/questionnaire/{id}"
         );
     }
 
@@ -82,7 +82,7 @@ else
         try
         {
             var assigned = await Http.GetFromJsonAsync<List<QuestionnaireAnswerModel>>(
-                $"http://localhost:5160/api/questionnaireanswer/assigned/{patientId}");
+                $"api/questionnaireanswer/assigned/{patientId}");
 
             var current = assigned.First(x => x.QuestionnaireId == id);
 
@@ -101,7 +101,7 @@ else
             };
             
             var response = await Http.PostAsJsonAsync(
-                "http://localhost:5160/api/questionnaireanswer/submit",
+                "api/questionnaireanswer/submit",
                 questionnaireAnswer);
 
             Console.WriteLine($"Status: {response.StatusCode}");

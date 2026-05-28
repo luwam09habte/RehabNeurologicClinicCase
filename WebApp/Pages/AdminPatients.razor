@@ -131,7 +131,7 @@
     protected override async Task OnInitializedAsync()
     {
         patients = await Http.GetFromJsonAsync<List<Patient>>(
-            "http://localhost:5160/api/patient"
+            "api/patient"
         );
     }
     
@@ -200,11 +200,11 @@
     private async Task CreatePatient()
     {
         await Http.PostAsJsonAsync(
-            "http://localhost:5160/api/patient",
+            "api/patient",
             newPatient);
 
         patients = await Http.GetFromJsonAsync<List<Patient>>(
-            "http://localhost:5160/api/patient");
+            "api/patient");
 
         newPatient = new Patient();
 

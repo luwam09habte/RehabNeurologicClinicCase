@@ -31,7 +31,7 @@
     {
         // Kalder på Validate endpoint med API
         var response = await Http.PostAsJsonAsync(
-            $"http://localhost:5160/api/admin/validate?email={email}&password={password}",
+            $"api/admin/validate?email={email}&password={password}",
             new {}
         );
 

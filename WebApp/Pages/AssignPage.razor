@@ -114,13 +114,13 @@ else
     protected override async Task OnInitializedAsync()
     {
         patients = await Http.GetFromJsonAsync<List<Patient>>(
-            "http://localhost:5160/api/patient");
+            "api/patient");
 
         questionnaires = await Http.GetFromJsonAsync<List<Questionnaire>>(
-            "http://localhost:5160/api/questionnaire");
+            "api/questionnaire");
 
         allAnswers = await Http.GetFromJsonAsync<List<QuestionnaireAnswerModel>>(
-            "http://localhost:5160/api/questionnaireanswer");
+            "api/questionnaireanswer");
     }
 
     private List<string> availableInjuryTypes = new()
@@ -195,7 +195,7 @@ else
         };
 
         var response = await Http.PostAsJsonAsync(
-            "http://localhost:5160/api/questionnaireanswer/assign",
+            "api/questionnaireanswer/assign",
             assignment);
 
         if (response.IsSuccessStatusCode)

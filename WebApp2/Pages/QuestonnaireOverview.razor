@@ -109,12 +109,12 @@ else
 
         var assigned =
             await Http.GetFromJsonAsync<List<QuestionnaireAnswerModel>>(
-                $"http://localhost:5160/api/questionnaireanswer/assigned/{patient.PatientId}"
+                $"api/questionnaireanswer/assigned/{patient.PatientId}"
             );
 
         var allQuestionnaires =
             await Http.GetFromJsonAsync<List<Questionnaire>>(
-                "http://localhost:5160/api/questionnaire"
+                "api/questionnaire"
             );
 
         var assignedIds = assigned?

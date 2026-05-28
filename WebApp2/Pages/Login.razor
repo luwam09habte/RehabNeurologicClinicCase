@@ -30,7 +30,7 @@
     public async Task OnClickLogin()
     {
         var response = await Http.PostAsJsonAsync(
-            $"http://localhost:5160/api/patient/validate?email={email}&password={password}",
+            $"api/patient/validate?email={email}&password={password}",
             new { }
         );
 
