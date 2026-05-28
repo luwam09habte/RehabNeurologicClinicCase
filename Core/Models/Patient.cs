@@ -15,6 +15,4 @@ public class Patient
 
     public int Age { get; set; } = 0;
     public string Gender { get; set; } = string.Empty;
-    
-
 }

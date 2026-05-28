@@ -15,6 +15,4 @@ public class Questionnaire
     
     /*Så det kan tildelses på patientID
     public List<int> AssignedToPatientIds { get; set; } = new();*/
-    
-    /* Måske den her - public DateTime CreatedAt { get; set; }*/
 }

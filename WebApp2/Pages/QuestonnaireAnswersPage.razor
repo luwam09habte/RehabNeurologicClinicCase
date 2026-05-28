@@ -43,7 +43,7 @@ else
                         {
                             <label class="option-label">
                                 <input type="radio" name="@q.QuestionId" value="@option"
-                                       @onchange="() => SubmitAnswer(q.QuestionId, option)"/>
+                                       @onchange="() => SaveAnswer(q.QuestionId, option)"/>
                                 @option
                             </label>
                         }
@@ -61,27 +61,18 @@ else
     private bool ShowPopup = false;
     private Dictionary<int, string> answers = new();
     private int patientId;
-    private int answerModelId;
 
     protected override async Task OnInitializedAsync()
     {
         var patient = await localStorage.GetItemAsync<Patient>("Patient");
         patientId = patient.PatientId;
         
-        // Hent det tildelte svar for at få Id'et
-        var assigned = await Http.GetFromJsonAsync<List<QuestionnaireAnswerModel>>(
-            $"http://localhost:5160/api/questionnaireanswer/assigned/{patientId}"
-        );
-
-        var thisAssignment = assigned?.FirstOrDefault(a => a.QuestionnaireId == id);
-        answerModelId = thisAssignment?.Id ?? 0;
-        
         questionnaire = await Http.GetFromJsonAsync<Questionnaire>(
             $"http://localhost:5160/api/questionnaire/{id}"
         );
     }
 
-    private void SubmitAnswer(int questionId, string option)
+    private void SaveAnswer(int questionId, string option)
     {
         answers[questionId] = option;
     }
@@ -90,13 +81,18 @@ else
     {
         try
         {
+            var assigned = await Http.GetFromJsonAsync<List<QuestionnaireAnswerModel>>(
+                $"http://localhost:5160/api/questionnaireanswer/assigned/{patientId}");
+
+            var current = assigned.First(x => x.QuestionnaireId == id);
+
             var questionnaireAnswer = new QuestionnaireAnswerModel
             {
-                Id = answerModelId,
+                Id = current.Id,
                 QuestionnaireId = id,
                 PatientId = patientId,
-                IsCompleted = true,
                 SubmittedAt = DateTime.Now,
+                FollowUpType = current.FollowUpType,
                 Answers = answers.Select(a => new QuestionAnswer
                 {
                     QuestionId = a.Key,

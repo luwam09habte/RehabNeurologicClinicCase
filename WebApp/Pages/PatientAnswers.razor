@@ -84,7 +84,6 @@
     </div>
     
     <div class="col-md-4">
-
         <select class="form-select"
                 @bind="selectedFollowUpType">
 
@@ -94,14 +93,14 @@
 
             @foreach (var type in Enum.GetValues<FollowUpType>())
             {
-                <option value="@type">
+                <option value="@type.ToString()">
                     @type
                 </option>
             }
 
         </select>
-
     </div>
+
     
 </div>
 
@@ -158,7 +157,7 @@ else
     private string selectedStatus = "";
     private string minAge = "";
     private string maxAge = "";
-    private FollowUpType? selectedFollowUpType;
+    private string selectedFollowUpType = "";
     
     private string ExportUrl =>
         $"http://localhost:5160/api/questionnaireanswer/export" +
@@ -215,38 +214,35 @@ else
                     if (p.Gender != selectedGender)
                         continue;
                 
-                if (selectedFollowUpType.HasValue)
+                if (!string.IsNullOrWhiteSpace(selectedFollowUpType))
                 {
-                    if (a.FollowUpType != selectedFollowUpType.Value)
+                    if (!string.Equals(a.FollowUpType.ToString(), selectedFollowUpType, StringComparison.OrdinalIgnoreCase))
                         continue;
                 }
+
                 
                 if (!string.IsNullOrWhiteSpace(selectedStatus))
                 {
                     var samePatientAndQuestionnaire =
                         allAnswers
                             .Where(x =>
-                                x.PatientId == a.PatientId
-                                &&
+                                x.PatientId == a.PatientId &&
                                 x.QuestionnaireId == a.QuestionnaireId)
                             .ToList();
 
-                    bool hasBefore = samePatientAndQuestionnaire.Any(x => x.FollowUpType == FollowUpType.FørBehandling);
-                    bool hasAfter = samePatientAndQuestionnaire.Any(x => x.FollowUpType == FollowUpType.EfterBehandling);
-                    bool has3Months = samePatientAndQuestionnaire.Any(x => x.FollowUpType == FollowUpType.TreMånederEfter);
-                    bool has6Months = samePatientAndQuestionnaire.Any(x => x.FollowUpType == FollowUpType.SeksMånederEfter);
-
+                    // Et forløb er afsluttet, hvis ALLE opfølgninger findes
                     bool completed =
-                        hasBefore &&
-                        hasAfter &&
-                        has3Months &&
-                        has6Months;
+                        samePatientAndQuestionnaire.Any(x => x.FollowUpType == FollowUpType.FørBehandling) &&
+                        samePatientAndQuestionnaire.Any(x => x.FollowUpType == FollowUpType.EfterBehandling) &&
+                        samePatientAndQuestionnaire.Any(x => x.FollowUpType == FollowUpType.TreMånederEfter) &&
+                        samePatientAndQuestionnaire.Any(x => x.FollowUpType == FollowUpType.SeksMånederEfter);
 
                     bool filterValue = bool.Parse(selectedStatus);
 
                     if (completed != filterValue)
                         continue;
                 }
+
 
                 if (!string.IsNullOrWhiteSpace(minAge))
                     if (p.Age < int.Parse(minAge))

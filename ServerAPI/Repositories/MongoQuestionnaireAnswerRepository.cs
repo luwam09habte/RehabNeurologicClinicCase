@@ -37,7 +37,7 @@ public class MongoQuestionnaireAnswerRepository : IQuestionnaireAnswerRepository
     {
         answer.SubmittedAt = DateTime.UtcNow;
         answer.UpdatedAt = DateTime.UtcNow;
-        answer.IsCompleted = true; // ✅ ikke afsluttet endnu
+        answer.IsCompleted = true;
 
         // 1. opdater svar (assignment bliver til besvaret)
         _collection.ReplaceOne(x => x.Id == answer.Id, answer);
@@ -72,7 +72,7 @@ public class MongoQuestionnaireAnswerRepository : IQuestionnaireAnswerRepository
     // GET ALL
     public List<QuestionnaireAnswerModel> GetAll()
     {
-        return _collection.Find(x => x.IsCompleted == true).ToList();
+        return _collection.Find(x => x.Answers != null && x.Answers.Any()).ToList();
     }
 
     // GET BY ID
