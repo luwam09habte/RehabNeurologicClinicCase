@@ -120,6 +120,7 @@ public class QuestionnaireAnswerController : ControllerBase
             worksheet.Cell(1, 8).Value = "Svar";
             worksheet.Cell(1, 9).Value = "Dato";
             worksheet.Cell(1, 10).Value = "Status";
+            worksheet.Cell(1, 11).Value = "Indsats";
 
             worksheet.Row(1).Style.Font.Bold = true;
 
@@ -147,6 +148,9 @@ public class QuestionnaireAnswerController : ControllerBase
 
                     worksheet.Cell(row, 10).Value =
                         answer.IsCompleted ? "Afsluttet" : "Aktiv";
+                    
+                    worksheet.Cell(row, 11).Value =
+                        GetSeniorityCategory(patient?.InjuryDate, answer.SubmittedAt);
 
                     row++;
                 }
@@ -163,5 +167,21 @@ public class QuestionnaireAnswerController : ControllerBase
                 content,
                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                 "Besvarelser.xlsx");
+        }
+        
+        private string GetSeniorityCategory(DateTime? injuryDate, DateTime measurementDate)
+        {
+            if (injuryDate == null)
+                return "Ukendt";
+
+            var years = (measurementDate - injuryDate.Value).TotalDays / 365.25;
+
+            if (years < 1)
+                return "Tidlig";
+
+            if (years <= 5)
+                return "Mellem";
+
+            return "Sen";
         }
     }

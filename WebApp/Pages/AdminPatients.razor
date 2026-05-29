@@ -116,8 +116,12 @@
                         ? p.InjuryDate.Value.ToString("dd.MM.yyyy") 
                         : "Ingen dato")
                 </p>
+                <p class="text-muted mb-1">
+                    Indsats: @GetSeniorityCategory(p.InjuryDate)
+                </p>
                 
                 <span class="badge bg-primary">@p.InjuryType</span>
+                
             </div>
         </div>
     }
@@ -209,5 +213,21 @@
         newPatient = new Patient();
 
         showModal = false;
+    }
+    
+    private string GetSeniorityCategory(DateTime? injuryDate)
+    {
+        if (injuryDate == null)
+            return "Ukendt";
+
+        var years = (DateTime.Today - injuryDate.Value).TotalDays / 365.25;
+
+        if (years < 1)
+            return "Tidlig";
+
+        if (years <= 5)
+            return "Mellem";
+
+        return "Sen";
     }
 }
