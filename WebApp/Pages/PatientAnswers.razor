@@ -20,7 +20,7 @@
     <div class="col-md-4">
         <select class="form-select" @bind="selectedInjuryType">
             <option value="">Alle skadetyper</option>
-            @foreach (var type in availableInjuryTypes)
+            @foreach (var type in InjuryTypes)
             {
                 <option value="@type">@type</option>
             }
@@ -180,7 +180,7 @@ else
     private Patient? GetPatient(int patientId) =>
         patients?.FirstOrDefault(p => p.PatientId == patientId);
 
-    private List<string> availableInjuryTypes = new()
+    private List<string> InjuryTypes = new()
     {
         "Covid-19",
         "Stress",

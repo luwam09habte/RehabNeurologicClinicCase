@@ -14,7 +14,6 @@ public enum FollowUpType
 public class QuestionnaireAnswerModel
 {
     [BsonId]
-    /*[BsonElement("_id")]  Måske den skal være der*/ 
     public int Id { get; set; }
     public int PatientId { get; set; } = 0;
     public int QuestionnaireId { get; set; }

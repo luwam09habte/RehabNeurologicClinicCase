@@ -39,7 +39,7 @@
 
                     <h5>Vælg skadetyper</h5>
 
-                    @foreach (var injury in availableInjuryTypes)
+                    @foreach (var injury in InjuryTypes)
                     {
                         <div class="form-check">
                             <input class="form-check-input"
@@ -253,7 +253,7 @@ else
 
     private bool showModal = false;
 
-    private List<string> availableInjuryTypes = new()
+    private List<string> InjuryTypes = new()
     {
         "Covid-19",
         "Stress",

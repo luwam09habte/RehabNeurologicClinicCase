@@ -140,19 +140,16 @@
     }
     
     /*Laver en sorteret liste af unikke skadetyper fra alle patienter – hvis der er data at hente*/
-    private IEnumerable<string> InjuryTypes
+    private List<string> InjuryTypes = new()
     {
-        get
-        {
-            if (patients == null)
-                return Enumerable.Empty<string>();
-
-            return patients
-                .Select(p => p.InjuryType)
-                .Distinct()
-                .OrderBy(x => x);
-        }
-    }
+        "Covid-19",
+        "Stress",
+        "Hjerneskade/tbi",
+        "Hjernerystelse",
+        "Alzheimers",
+        "TBI",
+        "Slagtilfælde"
+    };
 
     /*Til søgnning - Kigger alle patienter igennem og beholder kun dem der matcher søgning + skadetype filter*/
 
