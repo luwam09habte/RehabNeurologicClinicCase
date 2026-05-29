@@ -114,9 +114,9 @@ public class QuestionnaireAnswerController : ControllerBase
             worksheet.Cell(1, 2).Value = "Køn";
             worksheet.Cell(1, 3).Value = "Skadetype";
             worksheet.Cell(1, 4).Value = "Alder";
-            worksheet.Cell(1, 5).Value = "QuestionnaireId";
+            worksheet.Cell(1, 5).Value = "Træthedsevaluering";
             worksheet.Cell(1, 6).Value = "FollowUpType";
-            worksheet.Cell(1, 7).Value = "QuestionId";
+            worksheet.Cell(1, 7).Value = "Spørgsmål";
             worksheet.Cell(1, 8).Value = "Svar";
             worksheet.Cell(1, 9).Value = "Dato";
             worksheet.Cell(1, 10).Value = "Status";
