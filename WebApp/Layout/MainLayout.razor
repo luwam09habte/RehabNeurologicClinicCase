@@ -1,6 +1,6 @@
 ﻿@using Blazored.LocalStorage
 @inherits LayoutComponentBase
-@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 @using Core.Models
 
 <div class="page">
@@ -56,7 +56,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var admin = await sessionStorage.GetItemAsync<Admin>("Admin");
+        var admin = await localStorage.GetItemAsync<Admin>("Admin");
         if (admin != null)
             adminNavn = admin.Name;
     }

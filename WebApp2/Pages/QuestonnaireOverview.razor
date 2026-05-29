@@ -39,47 +39,7 @@ else
                         <p class="mb-2 text-muted">
                             @q.Text
                         </p>
-
-                        <div class="mb-2">
-
-                            <strong>Skadetyper:</strong>
-
-                            @if (q.InjuryTypes.Any())
-                            {
-                                @foreach (var injury in q.InjuryTypes)
-                                {
-                                    <span class="badge bg-primary me-2">
-                                        @injury
-                                    </span>
-                                }
-                            }
-                            else
-                            {
-                                <span>Ingen</span>
-                            }
-
-                        </div>
-
-                        <div>
-
-                            <strong>Kategorier:</strong>
-
-                            @{
-                                var categories = q.Questions
-                                    .Select(x => x.Title)
-                                    .Distinct()
-                                    .ToList();
-                            }
-
-                            @foreach (var category in categories)
-                            {
-                                <span class="badge bg-secondary me-2">
-                                    @category
-                                </span>
-                            }
-
-                        </div>
-
+                        
                     </div>
 
                     <button class="btn btn-primary">
