@@ -194,7 +194,8 @@ else
             FollowUpType = MapTiming(selectedTiming),
             IsCompleted = false
         };
-
+        // Sender Post request til QuestionnaireAnswerController for at tildele spørgeskemaet
+        // API'en håndterer oprettelse af forløb og tildeling
         var response = await Http.PostAsJsonAsync(
             "api/questionnaireanswer/assign",
             assignment);

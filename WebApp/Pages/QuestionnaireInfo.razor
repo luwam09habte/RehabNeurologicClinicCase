@@ -52,11 +52,11 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        // 1. Hent ALLE svar fra patienten der lavede denne besvarelse
+        // 1. Get request til QuestionnaireAnswerController om at hente ALLE svar fra patienten der lavede denne besvarelse
         answers = await Http.GetFromJsonAsync<List<QuestionnaireAnswerModel>>(
             $"api/questionnaireanswer/{id}/patientanswers");
-
-        // 2. Hent spørgeskemaet ud fra første svar
+        
+        // Henter spørgeskemaet ud fra første svars QuestionnaireId.
         var first = answers?.FirstOrDefault();
         if (first != null)
         {

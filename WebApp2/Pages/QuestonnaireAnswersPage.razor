@@ -71,7 +71,8 @@ else
             $"api/questionnaire/{id}"
         );
     }
-
+    
+    // Gemmer svar som en Dictionary
     private void SaveAnswer(int questionId, string option)
     {
         answers[questionId] = option;
@@ -85,7 +86,8 @@ else
                 $"api/questionnaireanswer/assigned/{patientId}");
 
             var current = assigned.First(x => x.QuestionnaireId == id);
-
+            
+            // Opretter et QuestionnaireAnswerModel objekt med svarene og patientens id
             var questionnaireAnswer = new QuestionnaireAnswerModel
             {
                 Id = current.Id,
@@ -99,7 +101,7 @@ else
                     SelectedOption = a.Value
                 }).ToList()
             };
-            
+            // Sender Post request til QuestionnaireAnswerController for at gemme svarene i databasen
             var response = await Http.PostAsJsonAsync(
                 "api/questionnaireanswer/submit",
                 questionnaireAnswer);

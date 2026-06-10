@@ -20,7 +20,7 @@ public class QuestionnaireAnswerController : ControllerBase
         _patientRepository = patientRepository;
     }
 
-    // TILDEL SPØRGESKEMA
+    // TILDEL SPØRGESKEMA. Modtager Post request fra admin AssignPage. Poster request til repository om at tildele spørgeskema i database
     [HttpPost("assign")]
     public IActionResult Assign([FromBody] QuestionnaireAnswerModel model)
     {
@@ -34,21 +34,22 @@ public class QuestionnaireAnswerController : ControllerBase
 
         return Ok(model);
     }
-// Henter en liste af spørgeskema for en patient som patienten skal svare på (ikke besvaret endnu)
+// Henter en liste fra QuestionnaireOverview page af spørgeskemaer for en patient som patienten skal svare på (ikke besvaret endnu)
     [HttpGet("assigned/{patientId}")]
     public ActionResult<List<QuestionnaireAnswerModel>> GetAssigned(int patientId)
     {
         return Ok(_repository.GetAssigned(patientId));
     }
 
-    // Henter historik for en patients svar - kunne bruges hvis patientet skulle se tidligere svar på spørgeskemaer
+    // Henter historik for en patients svar - bruges ikke, men kunne bruges hvis patientet skulle se tidligere svar på spørgeskemaer
     [HttpGet("history/{patientId}")]
     public ActionResult<List<QuestionnaireAnswerModel>> GetHistory(int patientId)
     {
         return Ok(_repository.GetHistory(patientId));
     }
 
-    // SUBMIT SVAR
+    // SUBMIT SVAR - Modtager Post request fra patient QuestionnaireAnswersPage. Beder repository om at gemme svar i database
+    // [FromBody] Json - C# 
     [HttpPost("submit")]
     public IActionResult Submit([FromBody] QuestionnaireAnswerModel model)
     {
@@ -60,14 +61,15 @@ public class QuestionnaireAnswerController : ControllerBase
         return Ok();
     }
 
-    // HENT ALLE SVAR
+    // Modtager Get request fra admin PatientAnswers page og henter alle patienters svar
     [HttpGet]
     public ActionResult<List<QuestionnaireAnswerModel>> GetAll()
     {
         return Ok(_repository.GetAll());
     }
 
-    // Gør sådan at Admin kan se alle spørgsmål + svar en patient har lavet, på detalje siden
+    // Modtager Get request fra admin QuestionnaireInfo page.
+    // Gør sådan at Admin kan se alle spørgsmål + svar en patient har lavet
     [HttpGet("{answerId}/patientanswers")]
     public ActionResult<List<QuestionnaireAnswerModel>> GetAllAnswersForSamePatient(int answerId)
     {
@@ -81,7 +83,7 @@ public class QuestionnaireAnswerController : ControllerBase
         return Ok(patientAnswers);
     }
     
-        // EKSPORT TIL EXCEL 
+        // EKSPORT TIL EXCEL. Modtager request fra patient answers 
         [HttpGet("export")]
         public IActionResult ExportToExcel(
             string? searchText,

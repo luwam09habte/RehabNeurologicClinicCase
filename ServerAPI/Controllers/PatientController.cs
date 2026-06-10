@@ -22,6 +22,7 @@ public class PatientController : ControllerBase
         return FakePatientRepository.GetAll();
     }
 
+    // Modtager request fra Patient login page. Poster request til repository om at validere
     [HttpPost("Validate")]
     public ActionResult<Patient> Validate(string email, string password)
     {

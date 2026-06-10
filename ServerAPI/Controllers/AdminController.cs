@@ -21,7 +21,7 @@ public class AdminController : ControllerBase
     {
         return FakeAdminRepository.GetAll();
     }
-
+    // Modtager request fra Admin login page. Poster request til repository om at validere
     [HttpPost("validate")]
     public Admin? Validate(string email, string password)
     {

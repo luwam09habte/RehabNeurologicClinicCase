@@ -159,6 +159,7 @@ else
     private string maxAge = "";
     private string selectedFollowUpType = "";
     
+    // Property med query parameter. Sender Get request til QuestionnaireAnswerController
     private string ExportUrl =>
         $"https://rnkliniksl.azurewebsites.net/api/questionnaireanswer/export" +
         $"?searchText={searchText}" +
