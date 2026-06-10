@@ -118,7 +118,8 @@ else
 
         questionnaires = await Http.GetFromJsonAsync<List<Questionnaire>>(
             "api/questionnaire");
-
+        
+// Denne var tænkt som en form for validering for at tjekke om en patient havde modtaget det spøtgeskema før - men bliver ikke brugt
         allAnswers = await Http.GetFromJsonAsync<List<QuestionnaireAnswerModel>>(
             "api/questionnaireanswer");
     }
@@ -133,7 +134,7 @@ else
         "TBI",
         "Slagtilfælde"
     };
-
+    // Property "FilteredPatients" laver nu en filtreret patientliste til frontend
     private IEnumerable<Patient> FilteredPatients
     {
         get

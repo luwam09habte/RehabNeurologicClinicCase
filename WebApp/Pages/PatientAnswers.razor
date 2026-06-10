@@ -168,7 +168,7 @@ else
         $"&maxAge={maxAge}" +
         $"&completed={selectedStatus}";
 
-    // Henter alle svar fra patienter
+    // Henter alle svar og patienter og matcher derfefter på PatientId
     protected override async Task OnInitializedAsync()
     { patients = await Http.GetFromJsonAsync<List<Patient>>(
             "api/patient");

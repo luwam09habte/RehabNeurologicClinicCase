@@ -37,6 +37,7 @@ public class MongoQuestionnaireRepository : IQuestionnaireRepository
         }
 
         questionnaire.QuestionnaireId = newId;
+        
         // Giver hvert spørgsmål et unikt ID
         int questionId = 1;
         foreach (var question in questionnaire.Questions)

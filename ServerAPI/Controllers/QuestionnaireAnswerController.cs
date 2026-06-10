@@ -12,6 +12,7 @@ public class QuestionnaireAnswerController : ControllerBase
     private readonly IQuestionnaireAnswerRepository _repository;
     private readonly IPatientRepository _patientRepository;
 
+    // Constructor
     public QuestionnaireAnswerController(IQuestionnaireAnswerRepository repository,
         IPatientRepository patientRepository)
     {
@@ -33,15 +34,14 @@ public class QuestionnaireAnswerController : ControllerBase
 
         return Ok(model);
     }
-
-    // HENT TILDELTE (ikke besvaret)
+// Henter en liste af spørgeskema for en patient som patienten skal svare på (ikke besvaret endnu)
     [HttpGet("assigned/{patientId}")]
     public ActionResult<List<QuestionnaireAnswerModel>> GetAssigned(int patientId)
     {
         return Ok(_repository.GetAssigned(patientId));
     }
 
-    // HENT HISTORIK (besvaret)
+    // Henter historik for en patients svar - kunne bruges hvis patientet skulle se tidligere svar på spørgeskemaer
     [HttpGet("history/{patientId}")]
     public ActionResult<List<QuestionnaireAnswerModel>> GetHistory(int patientId)
     {
@@ -67,7 +67,7 @@ public class QuestionnaireAnswerController : ControllerBase
         return Ok(_repository.GetAll());
     }
 
-    // HENT ALLE SVAR FOR SAMME PATIENT
+    // Gør sådan at Admin kan se alle spørgsmål + svar en patient har lavet, på detalje siden
     [HttpGet("{answerId}/patientanswers")]
     public ActionResult<List<QuestionnaireAnswerModel>> GetAllAnswersForSamePatient(int answerId)
     {

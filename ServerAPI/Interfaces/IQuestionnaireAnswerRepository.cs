@@ -11,4 +11,4 @@ public interface IQuestionnaireAnswerRepository
     List<QuestionnaireAnswerModel> GetAssigned(int patientId);
     List<QuestionnaireAnswerModel> GetHistory(int patientId);
     public void Assign(QuestionnaireAnswerModel assignment);
-}
+} 

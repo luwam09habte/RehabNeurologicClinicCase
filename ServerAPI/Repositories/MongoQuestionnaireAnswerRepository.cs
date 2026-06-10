@@ -39,7 +39,7 @@ public class MongoQuestionnaireAnswerRepository : IQuestionnaireAnswerRepository
         answer.UpdatedAt = DateTime.UtcNow;
         answer.IsCompleted = true;
 
-        // 1. opdater svar (assignment bliver til besvaret)
+        // Finder dokumentet med samme Id og erstater det med det nye objekt, som nu indeholder svarene
         _collection.ReplaceOne(x => x.Id == answer.Id, answer);
 
         // 2. hent alle svar for samme patient + questionnaire

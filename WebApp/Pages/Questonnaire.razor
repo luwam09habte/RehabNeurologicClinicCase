@@ -241,12 +241,13 @@ else
 }
 
 @code {
-
-    private Questionnaire questionnaire = new Questionnaire
+    // Til at oprette spørgeskema
+    private Questionnaire questionnaire = new()
     {
         Questions = new List<Question>()
     };
 
+    // Til at vise spørgeskema
     private List<Questionnaire> questionnaires = new();
 
     private string successMessage = string.Empty;
@@ -264,6 +265,7 @@ else
         "Slagtilfælde"
     };
 
+    // Henter eksisterende spørgeskemaer fra databasen
     protected override async Task OnInitializedAsync()
     {
         questionnaires = await Http.GetFromJsonAsync<List<Questionnaire>>(
@@ -378,6 +380,7 @@ else
         }
     }
 
+    // Gemmer spørgeskema
     private async Task SaveQuestionnaire()
     {
         questionnaire.AdminId = 1;
