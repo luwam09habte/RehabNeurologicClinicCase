@@ -32,4 +32,5 @@ public class PatientController : ControllerBase
 
         return Ok(patient);
     }
+    
 }
