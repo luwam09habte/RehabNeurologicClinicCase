@@ -1,4 +1,7 @@
 namespace Core.Models;
+// Data skabelon
+// String empty = starter som en tom tekst i stedet for null
+// User = fælles grundklasse for brugere i systemet.
 
 public class User
 {

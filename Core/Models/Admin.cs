@@ -1,4 +1,6 @@
 namespace Core.Models;
+// Data skabelon
+// Admin arver fra User med :
 
 public class Admin : User
 {

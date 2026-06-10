@@ -1,4 +1,5 @@
 namespace Core.Models;
+// Data skabelon
 
 public class QuestionAnswer
 {

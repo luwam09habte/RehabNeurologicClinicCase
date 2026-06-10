@@ -1,4 +1,7 @@
 namespace Core.Models;
+// Data skabelon
+// Patient arver fra User med :
+// "?" = nullable returtype (kan være tom/null)
 
 public class Patient : User
 {

@@ -1,4 +1,5 @@
 namespace Core.Models;
+// Data skabelon
 
 public class Question
 {
@@ -11,4 +12,5 @@ public class Question
     public string Placeholder { get; set; } = string.Empty;
     public bool IsRequired { get; set; }
     public string Type { get; set; } = "Scale5";
+    // Spørgsmål starter som "Scale5" - altså 1-5 skala
 }
