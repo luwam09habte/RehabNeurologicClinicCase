@@ -49,7 +49,7 @@ public class QuestionnaireAnswerController : ControllerBase
     }
 
     // SUBMIT SVAR - Modtager Post request fra patient QuestionnaireAnswersPage. Beder repository om at gemme svar i database
-    // [FromBody] Json - C# 
+    // [FromBody] Laver Json om til C# 
     [HttpPost("submit")]
     public IActionResult Submit([FromBody] QuestionnaireAnswerModel model)
     {

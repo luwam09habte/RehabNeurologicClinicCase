@@ -2,10 +2,11 @@ using Core.Models;
 
 namespace ServerAPI.Interfaces;
 
+// Kontrakt for spørgeskema-repository
+// Alle repositories der implementerer dette interface skal have disse metoder
 public interface IQuestionnaireRepository
 {
-    List<Questionnaire> GetQuestionnaires();
-    Questionnaire GetById(int id);
-    void CreateQuestionnaire(Questionnaire questionnaire);
-   
+    Questionnaire GetById(int id); // Henter ét spørgeskema ud fra dets id
+    void CreateQuestionnaire(Questionnaire questionnaire); // Gemmer et nyt spørgeskema
+    List<Questionnaire> GetQuestionnaires(); // Henter alle spørgeskemaer
 }
